@@ -1,0 +1,40 @@
+name: Self CI
+
+# Self-validation for terraform-framework-example. Exercises the entire
+# framework end-to-end on every PR with the same toolchain a real
+# consumer would use.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: self-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  terraform-ci:
+    name: terraform ci (fmt + init + validate + test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Setup Terraform
+        # renovate: datasource=github-releases depName=hashicorp/terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: "1.15.1"
+          terraform_wrapper: false
+
+      - name: make ci
+        run: make ci
