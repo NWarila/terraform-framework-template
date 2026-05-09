@@ -36,5 +36,16 @@ jobs:
           terraform_version: "1.15.1"
           terraform_wrapper: false
 
+      - name: Install OPA
+        # renovate: datasource=github-releases depName=open-policy-agent/opa
+        env:
+          OPA_VERSION: "1.10.0"
+        run: |
+          set -euo pipefail
+          curl -fsSL -o /usr/local/bin/opa \
+            "https://openpolicyagent.org/downloads/v${OPA_VERSION}/opa_linux_amd64_static"
+          chmod +x /usr/local/bin/opa
+          opa version
+
       - name: make ci
         run: make ci

@@ -29,7 +29,14 @@
 !/.github/
 !/.github/workflows/
 !/.github/workflows/drift-gate.yaml
+!/.github/workflows/reusable-terraform-deploy.yaml
 !/.github/workflows/self-ci.yaml
+
+# ----- [ OPA policies ] ---------------------------------------------------------------------------
+!/policies/
+!/policies/opa/
+!/policies/opa/golden_terraform.rego
+!/policies/opa/golden_terraform_test.rego
 
 # ----- [ Documentation (Diátaxis + decision-records) ] --------------------------------------------
 !/docs/
