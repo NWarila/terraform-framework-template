@@ -21,6 +21,11 @@
 # ----- [ Top-level documentation ] ----------------------------------------------------------------
 !/README.md
 !/LICENSE
+!/CHANGELOG.md
+
+# ----- [ Release automation ] ---------------------------------------------------------------------
+!/release-please-config.json
+!/.release-please-manifest.json
 
 # ----- [ Build / quality interface ] --------------------------------------------------------------
 !/Makefile
@@ -46,6 +51,7 @@
 !/docs/how-to/.gitkeep
 !/docs/reference/
 !/docs/reference/.gitkeep
+!/docs/reference/terraform.md
 !/docs/explanation/
 !/docs/explanation/.gitkeep
 !/docs/decision-records/

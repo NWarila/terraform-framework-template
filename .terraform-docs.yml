@@ -15,8 +15,6 @@ content: |-
 
   {{ .Resources }}
 
-  {{ .DataSources }}
-
   {{ .Inputs }}
 
   {{ .Outputs }}
