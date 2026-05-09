@@ -54,6 +54,7 @@
 !/docs/reference/terraform.md
 !/docs/explanation/
 !/docs/explanation/.gitkeep
+!/docs/explanation/threat-model.md
 !/docs/decision-records/
 !/docs/decision-records/README.md
 !/docs/decision-records/org/
