@@ -46,6 +46,7 @@
 !/docs/how-to/.gitkeep
 !/docs/reference/
 !/docs/reference/.gitkeep
+!/docs/reference/terraform.md
 !/docs/explanation/
 !/docs/explanation/.gitkeep
 !/docs/decision-records/

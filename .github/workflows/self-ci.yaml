@@ -47,5 +47,17 @@ jobs:
           chmod +x /usr/local/bin/opa
           opa version
 
+      - name: Install terraform-docs
+        # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
+        env:
+          TERRAFORM_DOCS_VERSION: "0.20.0"
+        run: |
+          set -euo pipefail
+          curl -fsSL -o /tmp/td.tar.gz \
+            "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz"
+          tar xzf /tmp/td.tar.gz -C /tmp
+          install -m 0755 /tmp/terraform-docs /usr/local/bin/terraform-docs
+          terraform-docs --version
+
       - name: make ci
         run: make ci

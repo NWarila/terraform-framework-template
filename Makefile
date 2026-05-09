@@ -27,9 +27,21 @@ test:
 opa-test:
 	opa test policies/opa
 
+# Mutating: regenerates the BEGIN_TF_DOCS / END_TF_DOCS block in
+# docs/reference/terraform.md from the HCL in terraform/.
+docs:
+	terraform-docs --config .terraform-docs.yml terraform
+
+# Non-mutating: fails if docs/reference/terraform.md is out of sync.
+# Run by CI to enforce that committed terraform-docs output matches
+# what the current HCL would produce.
+docs-diff:
+	terraform-docs --config .terraform-docs.yml --output-check terraform
+
 ci:
 	$(MAKE) fmt-check
 	$(MAKE) init
 	$(MAKE) validate
 	$(MAKE) test
 	$(MAKE) opa-test
+	$(MAKE) docs-diff
