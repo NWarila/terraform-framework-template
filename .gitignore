@@ -21,6 +21,11 @@
 # ----- [ Top-level documentation ] ----------------------------------------------------------------
 !/README.md
 !/LICENSE
+!/CHANGELOG.md
+
+# ----- [ Release automation ] ---------------------------------------------------------------------
+!/release-please-config.json
+!/.release-please-manifest.json
 
 # ----- [ Build / quality interface ] --------------------------------------------------------------
 !/Makefile
