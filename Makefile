@@ -22,8 +22,14 @@ validate:
 test:
 	terraform -chdir=terraform test
 
+# OPA policy tests. Exercises every deny rule in
+# policies/opa/golden_terraform.rego against pass + fail fixtures.
+opa-test:
+	opa test policies/opa
+
 ci:
 	$(MAKE) fmt-check
 	$(MAKE) init
 	$(MAKE) validate
 	$(MAKE) test
+	$(MAKE) opa-test
