@@ -1,0 +1,60 @@
+# Default-deny (ADR-0003). Every tracked file MUST be explicitly
+# allowlisted below. No wildcard allows. Adding a tracked file requires
+# adding its exact path here too — keeps the tracked surface auditable
+# at a glance.
+**
+
+# ----- [ Repository self-management ] -------------------------------------------------------------
+!/.editorconfig
+!/.gitattributes
+!/.gitignore
+
+# ----- [ Top-level documentation ] ----------------------------------------------------------------
+!/README.md
+!/LICENSE
+
+# ----- [ Build / quality interface ] --------------------------------------------------------------
+!/Makefile
+
+# ----- [ GitHub configuration ] -------------------------------------------------------------------
+!/.github/
+!/.github/workflows/
+!/.github/workflows/self-ci.yaml
+
+# ----- [ Terraform module ] -----------------------------------------------------------------------
+!/terraform/
+!/terraform/versions.tf
+!/terraform/providers.tf
+!/terraform/backend.tf
+!/terraform/data.tf
+!/terraform/variables.tf
+!/terraform/locals.tf
+!/terraform/resources.tf
+!/terraform/outputs.tf
+!/terraform/fixtures/
+!/terraform/fixtures/tier_defaults.json
+!/terraform/tests/
+!/terraform/tests/synthetic_environments.tftest.hcl
+
+# ----- [ Examples ] -------------------------------------------------------------------------------
+!/examples/
+!/examples/single-environment/
+!/examples/single-environment/terraform.tfvars.example
+!/examples/multi-environment/
+!/examples/multi-environment/terraform.tfvars.example
+
+# ----- [ Terraform-generated artifacts that MUST stay ignored ] -----------------------------------
+# These would otherwise be allowed by directory rules above; the
+# explicit deny re-asserts them. Keeping the deny visible here is the
+# point of the deny-all strategy: it's easy to audit "what stays out".
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.lock.info
+.terraform.lock.hcl
+.synthetic-output/
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
