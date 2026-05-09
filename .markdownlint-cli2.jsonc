@@ -1,0 +1,25 @@
+{
+  "config": {
+    "default": true,
+    // MD013 (line-length): off; tables and ADR prose go wider than 80.
+    "MD013": false,
+    // MD033 (no-inline-html): off; <details>/<summary>, <br>, <! Note: ... !>
+    // are intentional throughout.
+    "MD033": false,
+    // MD041 (first-line-h1): off; some files (e.g. fixtures/README) start
+    // with metadata.
+    "MD041": false,
+    // MD024 (no-duplicate-headings) — siblings_only mode permits
+    // repeated subsection names ("Required Parameters" / "Optional
+    // Parameters") under different parent headings.
+    "MD024": { "siblings_only": true }
+  },
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    ".terraform/**",
+    "node_modules/**",
+    "**/CHANGELOG.md"
+  ]
+}
