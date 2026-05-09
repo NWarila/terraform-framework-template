@@ -6,11 +6,12 @@ terraform {
   # policies/opa/golden_terraform.rego.
   required_version = "= 1.15.1"
 
-  # Specify the required providers. All four are official HashiCorp
-  # providers selected for the do-nothing showcase: each demonstrates a
-  # distinct framework pattern (state-only resources, deterministic data
-  # generation, real artifact production, time-based lifecycle) without
-  # touching any external service or accruing cost.
+  # Specify the required providers. All five are official HashiCorp
+  # providers selected for the do-nothing showcase: each demonstrates
+  # a distinct framework pattern (state-only resources, deterministic
+  # data generation, real artifact production, time-based lifecycle,
+  # crypto material generation) without touching any external service
+  # or accruing cost.
   required_providers {
     null = {
       source  = "hashicorp/null"
@@ -18,11 +19,11 @@ terraform {
     }
     random = {
       source  = "hashicorp/random"
-      version = "= 3.7.2"
+      version = "= 3.8.1"
     }
     local = {
       source  = "hashicorp/local"
-      version = "= 2.5.4"
+      version = "= 2.8.0"
     }
     time = {
       source  = "hashicorp/time"
@@ -30,7 +31,7 @@ terraform {
     }
     tls = {
       source  = "hashicorp/tls"
-      version = "= 4.1.0"
+      version = "= 4.2.1"
     }
   }
 
