@@ -1,6 +1,6 @@
-# terraform-framework-example
+# terraform-framework-template
 
-The **do-nothing reference framework** for the NWarila portfolio. Showcases every Terraform-framework pattern (modules, variables, outputs, validation, tests, terraform-docs, OPA, plan/apply lifecycle, drift detection, sensitive output handling) using **synthetic providers only** (`null`, `random`, `local`, `time`, `tls`). Generates real `terraform.tfstate`, `terraform apply` runs end-to-end, `terraform test` exercises real assertions — all without external services, accounts, secrets, or recurring cost.
+The **do-nothing reference framework** for the NWarila portfolio. GitHub-flagged as a template — derivative frameworks seed from this and replace the synthetic providers with their real ones. Showcases every Terraform-framework pattern (modules, variables, outputs, validation, tests, terraform-docs, OPA, plan/apply lifecycle, drift detection, sensitive output handling) using **synthetic providers only** (`null`, `random`, `local`, `time`, `tls`). Generates real `terraform.tfstate`, `terraform apply` runs end-to-end, `terraform test` exercises real assertions — all without external services, accounts, secrets, or recurring cost.
 
 ## What this is, and what it isn't
 
