@@ -1,0 +1,253 @@
+name: Reusable Terraform Deploy
+
+# Reusable workflow consumed by runner repos that derive their data
+# from this do-nothing reference framework.
+#
+# A "runner" is a data-only deployer: it owns repos/public/ +
+# repos/private/ (per terraform-runner-template's contract) and
+# delegates the actual terraform plan/apply to this workflow. The
+# workflow:
+#
+#   1. Checks out this framework at framework_ref (a 40-char SHA).
+#   2. Checks out the consumer (the runner) at consumer_ref.
+#   3. Applies overlay_paths — copying the runner's data onto the
+#      framework checkout so terraform sees a single assembled tree.
+#   4. Sets up the pinned Terraform CLI version.
+#   5. terraform init + plan against the assembled tree.
+#   6. Optionally terraform apply (gated by input.apply).
+#   7. Uploads tfplan + state as workflow artifacts.
+#
+# This workflow does NOT push state anywhere remote — the do-nothing
+# framework uses the local backend; real frameworks override that in
+# their own backend.tf and consume runtime credentials. See
+# terraform/backend.tf in this repo for the canonical pattern.
+
+on:
+  workflow_call:
+    inputs:
+      framework_ref:
+        description: |
+          40-character commit SHA of this framework (NWarila/terraform-framework-example)
+          to check out. Renovate keeps this current in lockstep with the
+          caller's `uses:` pin.
+        required: true
+        type: string
+      consumer_repo:
+        description: |
+          owner/repo of the runner calling this workflow. Defaults to
+          the caller via github.repository when omitted.
+        required: false
+        type: string
+        default: ""
+      consumer_ref:
+        description: |
+          Git ref of the runner to check out. Defaults to github.sha
+          (the SHA of the calling workflow's commit).
+        required: false
+        type: string
+        default: ""
+      overlay_paths:
+        description: |
+          Newline-separated `<consumer-src>=><framework-dst>` entries
+          describing what to copy from the runner into the framework
+          tree before terraform sees it. Trailing slashes denote
+          directories; contents (including dotfiles) are copied
+          recursively. Example:
+
+            repos/public/=>terraform/repos/public/
+            repos/private/=>terraform/repos/private/
+
+          Empty input is allowed (rare — most runners overlay something).
+        required: false
+        type: string
+        default: ""
+      terraform_version:
+        description: |
+          Exact Terraform CLI version to install. Caller controls so
+          each runner can move forward independently with Renovate's help.
+        required: false
+        type: string
+        default: "1.15.1"
+      apply:
+        description: |
+          When true, run `terraform apply -auto-approve` after the
+          plan. Default false — most callers gate apply to specific
+          branches/events. Caller is responsible for ensuring inputs
+          are safe to apply (the framework runs in the caller's CI
+          context with the caller's GITHUB_TOKEN).
+        required: false
+        type: boolean
+        default: false
+      tfvars_file:
+        description: |
+          Optional path within the consumer to a tfvars file that
+          should be passed to terraform plan/apply via -var-file.
+          Path is interpreted relative to the consumer checkout.
+          Empty means no -var-file argument is added.
+        required: false
+        type: string
+        default: ""
+
+    outputs:
+      plan_status:
+        description: '"no-changes" | "has-changes" | "failed"'
+        value: ${{ jobs.deploy.outputs.plan_status }}
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: framework-example / deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      plan_status: ${{ steps.plan.outputs.plan_status }}
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Resolve consumer-ref / consumer-repo defaults
+        id: refs
+        env:
+          OVERRIDE_REPO: ${{ inputs.consumer_repo }}
+          OVERRIDE_REF: ${{ inputs.consumer_ref }}
+          FALLBACK_REPO: ${{ github.repository }}
+          FALLBACK_REF: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          repo="${OVERRIDE_REPO:-$FALLBACK_REPO}"
+          ref="${OVERRIDE_REF:-$FALLBACK_REF}"
+          echo "consumer_repo=${repo}" >> "${GITHUB_OUTPUT}"
+          echo "consumer_ref=${ref}"   >> "${GITHUB_OUTPUT}"
+          # framework_ref must be a 40-char SHA — same rule the OPA
+          # policy enforces. We re-validate here so misconfigured
+          # callers fail fast instead of getting a confusing checkout
+          # error later.
+          if ! [[ "${{ inputs.framework_ref }}" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::framework_ref must be a 40-character SHA, got '${{ inputs.framework_ref }}'"
+            exit 1
+          fi
+
+      - name: Check out framework at framework_ref
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: NWarila/terraform-framework-example
+          ref: ${{ inputs.framework_ref }}
+          path: framework
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check out consumer (runner) at consumer_ref
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: ${{ steps.refs.outputs.consumer_repo }}
+          ref: ${{ steps.refs.outputs.consumer_ref }}
+          path: consumer
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Apply overlay (consumer → framework)
+        if: ${{ inputs.overlay_paths != '' }}
+        env:
+          OVERLAY_PATHS: ${{ inputs.overlay_paths }}
+        run: |
+          set -euo pipefail
+          # Newline-separated `src=>dst` entries; blank lines and `#`
+          # comments are skipped. cp -a preserves modes/symlinks; the
+          # `${src}/.` form copies directory CONTENTS (including dotfiles)
+          # into ${dst} when src is a directory.
+          while IFS= read -r line; do
+            entry="${line%%#*}"
+            entry="$(echo "${entry}" | xargs)"
+            [ -z "${entry}" ] && continue
+            if [[ "${entry}" != *"=>"* ]]; then
+              echo "::error::overlay entry missing '=>' separator: ${entry}"
+              exit 1
+            fi
+            src="${entry%%=>*}"
+            dst="${entry##*=>}"
+            src="$(echo "${src}" | xargs)"
+            dst="$(echo "${dst}" | xargs)"
+            src_path="consumer/${src}"
+            dst_path="framework/${dst}"
+            if [ ! -e "${src_path}" ]; then
+              echo "::error::overlay source missing: ${src_path}"
+              exit 1
+            fi
+            mkdir -p "${dst_path}"
+            if [ -d "${src_path}" ]; then
+              cp -a "${src_path}/." "${dst_path}/"
+            else
+              cp -a "${src_path}" "${dst_path}"
+            fi
+            echo "overlay: ${src_path} -> ${dst_path}"
+          done <<< "${OVERLAY_PATHS}"
+
+      - name: Setup Terraform
+        # renovate: datasource=github-releases depName=hashicorp/terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+          terraform_wrapper: false
+
+      - name: terraform init
+        working-directory: framework/terraform
+        run: terraform init -input=false
+
+      - name: terraform plan
+        id: plan
+        working-directory: framework/terraform
+        env:
+          TFVARS_FILE: ${{ inputs.tfvars_file }}
+        run: |
+          set -euo pipefail
+          args=( -input=false -lock-timeout=300s -out=tfplan -detailed-exitcode )
+          if [ -n "${TFVARS_FILE}" ]; then
+            args+=( -var-file="../../consumer/${TFVARS_FILE}" )
+          fi
+          set +e
+          terraform plan "${args[@]}"
+          rc=$?
+          set -e
+          # detailed-exitcode: 0 = no changes; 1 = error; 2 = changes.
+          case "${rc}" in
+            0)
+              echo "plan_status=no-changes" >> "${GITHUB_OUTPUT}"
+              echo "Plan: no changes." ;;
+            2)
+              echo "plan_status=has-changes" >> "${GITHUB_OUTPUT}"
+              echo "Plan: changes detected." ;;
+            *)
+              echo "plan_status=failed" >> "${GITHUB_OUTPUT}"
+              echo "::error::terraform plan failed (exit ${rc})"
+              exit "${rc}" ;;
+          esac
+
+      - name: Upload plan artifact
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: tfplan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: framework/terraform/tfplan
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: terraform apply
+        if: ${{ inputs.apply && steps.plan.outputs.plan_status == 'has-changes' }}
+        working-directory: framework/terraform
+        run: terraform apply -input=false -auto-approve tfplan
+
+      - name: Upload state artifact (do-nothing framework only)
+        # The do-nothing framework uses the local backend, so state
+        # lives in framework/terraform/terraform.tfstate. Real
+        # derivative frameworks override the backend and never produce
+        # a local state file — this step would be a no-op for them.
+        if: ${{ inputs.apply && always() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: tfstate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: framework/terraform/terraform.tfstate
+          if-no-files-found: warn
+          retention-days: 14
