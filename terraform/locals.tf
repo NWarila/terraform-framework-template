@@ -13,7 +13,7 @@ locals {
   framework_decorations = {
     environment_prefix = var.environment_prefix
     global_tag         = var.global_tag
-    framework_source   = "NWarila/terraform-framework-example"
+    framework_source   = "NWarila/terraform-framework-template"
   }
 
   #endregion --- [ Data-Source-Derived Lookup Tables ] ----------------------------------- #
