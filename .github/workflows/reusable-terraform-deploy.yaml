@@ -27,7 +27,7 @@ on:
     inputs:
       framework_ref:
         description: |
-          40-character commit SHA of this framework (NWarila/terraform-framework-example)
+          40-character commit SHA of this framework (NWarila/terraform-framework-template)
           to check out. Renovate keeps this current in lockstep with the
           caller's `uses:` pin.
         required: true
@@ -98,7 +98,7 @@ permissions:
 
 jobs:
   deploy:
-    name: framework-example / deploy
+    name: framework-template / deploy
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
@@ -133,7 +133,7 @@ jobs:
       - name: Check out framework at framework_ref
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          repository: NWarila/terraform-framework-example
+          repository: NWarila/terraform-framework-template
           ref: ${{ inputs.framework_ref }}
           path: framework
           fetch-depth: 1

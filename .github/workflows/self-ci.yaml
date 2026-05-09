@@ -1,6 +1,6 @@
 name: Self CI
 
-# Self-validation for terraform-framework-example. Exercises the entire
+# Self-validation for terraform-framework-template. Exercises the entire
 # framework end-to-end on every PR with the same toolchain a real
 # consumer would use.
 
