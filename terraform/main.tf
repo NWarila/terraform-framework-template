@@ -28,7 +28,7 @@ resource "random_string" "environment_secret" {
   numeric = true
   keepers = merge(
     each.value["common_triggers"],
-    { secret_seed_present = var.secret_seed != null ? "yes" : "no" },
+    { secret_seed_digest = local.secret_seed_digest },
   )
 }
 

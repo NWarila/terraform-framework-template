@@ -16,22 +16,27 @@ locals {
     framework_source   = "NWarila/terraform-framework-template"
   }
 
+  # Bind random_string replacement to the optional sensitive seed without
+  # persisting the raw seed value in state.
+  secret_seed_digest = nonsensitive(sha256(var.secret_seed == null ? "" : var.secret_seed))
+
   #endregion --- [ Data-Source-Derived Lookup Tables ] ----------------------------------- #
 
   #region ------ [ Environment Expansion (var.all_environments → keyed map) ] ------------ #
 
   # The expansion comprehension. Pure mechanical merge: per-environment
   # values from var.all_environments override tier defaults from the
-  # JSON fixture; the result is a single map keyed by environment name
-  # that resources.tf consumes via for_each. resources.tf does no
+  # JSON fixture; the result is a single map keyed by prefixed environment
+  # resource identifier that main.tf consumes via for_each. main.tf does no
   # computation — every value it references is finalized HERE.
   synthetic_environments = {
-    for env in var.all_environments : env.name => {
+    for env in var.all_environments : "${var.environment_prefix}-${env.name}" => {
 
       /* Required Parameters */
-      name  = env.name
-      owner = env.owner
-      tier  = env.tier
+      resource_key = "${var.environment_prefix}-${env.name}"
+      name         = env.name
+      owner        = env.owner
+      tier         = env.tier
 
       /* Optional Parameters */
       enabled = env.enabled
@@ -58,15 +63,15 @@ locals {
       manifests       = env.manifests
       lifecycle_hooks = env.lifecycle_hooks
 
-      /* Single-optional resources (splat-on-optional in resources.tf) */
+      /* Single-optional resources (splat-on-optional in main.tf) */
       rotation = env.rotation == null ? null : {
         rotation_days = coalesce(
           env.rotation.rotation_days,
           local.tier_defaults[env.tier]["default_rotation_days"]
         )
         rotation_hours = env.rotation.rotation_hours
-        # triggers injected here so resources.tf stays a dumb pass-through —
-        # rotation block in resources.tf doesn't compute anything itself.
+        # triggers injected here so main.tf stays a dumb pass-through —
+        # rotation block in main.tf doesn't compute anything itself.
         triggers = merge(
           local.framework_decorations,
           { environment = env.name, tier = env.tier },
@@ -74,8 +79,8 @@ locals {
         )
       }
 
-      # certificate expands so resources.tf stays a dumb pass-through. The
-      # subject sub-block is left as-is when present (resources.tf uses the
+      # certificate expands so main.tf stays a dumb pass-through. The
+      # subject sub-block is left as-is when present (main.tf uses the
       # splat-on-optional dynamic pattern on each.value["certificate"]["subject"]).
       certificate = env.certificate == null ? null : {
         validity_period_hours = env.certificate.validity_period_hours
@@ -104,7 +109,7 @@ locals {
 
   # Terraform's `for_each` works on maps/sets, not nested lists. To
   # produce one local_file per (environment × manifest) pair, the nested
-  # lists are flattened into composite-keyed maps HERE — resources.tf
+  # lists are flattened into composite-keyed maps HERE — main.tf
   # then iterates those flat maps without doing any flattening itself.
   manifests_flat = {
     for pair in flatten([

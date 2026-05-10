@@ -1,14 +1,6 @@
-# All four synthetic providers are configuration-free: they have no
-# endpoints, credentials, or runtime authentication to declare. Empty
-# provider blocks make their presence explicit and demonstrate the
-# pattern derivative frameworks follow when their providers DO require
-# configuration (api_endpoint, api_token, region, etc. — see
-# proxmox-terraform-framework for a real example).
-
-provider "null" {}
-
-provider "random" {}
-
-provider "local" {}
-
-provider "time" {}
+# All five synthetic providers in this reference framework are configuration-free:
+# null, random, local, time, and tls. Source and version pins live in versions.tf;
+# no provider blocks are needed.
+#
+# This is intentional for module hygiene: empty provider blocks are deprecated
+# when this framework is consumed as a child module by runner integration.

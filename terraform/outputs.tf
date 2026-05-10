@@ -5,9 +5,10 @@
 # resource. Tests assert against this output to verify the apply
 # produced what the inputs asked for.
 output "environments" {
-  description = "Map keyed by environment name. Each entry composes references from every per-env synthetic resource: the generated pet name, the creation timestamp, and pointers to the resources produced for that environment."
+  description = "Map keyed by prefixed environment resource key (`<environment_prefix>-<name>`). Each entry composes references from every per-env synthetic resource: the generated pet name, the creation timestamp, and pointers to the resources produced for that environment."
   value = {
     for env_key, env in local.synthetic_environments : env_key => {
+      resource_key         = env.resource_key
       name                 = env.name
       owner                = env.owner
       tier                 = env.tier
@@ -29,7 +30,7 @@ output "environments" {
 #region ------ [ Aggregate / Roll-up Outputs ] ------------------------------------------- #
 
 output "manifest_paths" {
-  description = "Absolute path of every local_file produced by this framework, keyed by composite_key (environment__filename). Useful for downstream consumers (e.g. a runner overlay validator) to enumerate generated artifacts."
+  description = "Absolute path of every local_file produced by this framework, keyed by composite_key (`<environment_prefix>-<name>__filename`). Useful for downstream consumers (e.g. a runner overlay validator) to enumerate generated artifacts."
   value = {
     for k, f in local_file.manifest : k => f.filename
   }

@@ -13,28 +13,45 @@
 !/.terraform-docs.yml
 !/.tflint.hcl
 
-# ----- [ VS Code workspace configuration ] --------------------------------------------------------
-!/.vscode/
-!/.vscode/settings.json
-!/.vscode/extensions.json
-
 # ----- [ Top-level documentation ] ----------------------------------------------------------------
 !/README.md
 !/LICENSE
+!/CODE_OF_CONDUCT.md
+!/CONTRIBUTING.md
+!/SECURITY.md
+!/SUPPORT.md
 !/CHANGELOG.md
 
 # ----- [ Release automation ] ---------------------------------------------------------------------
 !/release-please-config.json
 !/.release-please-manifest.json
 
+# ----- [ Quality gates ] --------------------------------------------------------------------------
+!/baseline-manifest.json
+
 # ----- [ Build / quality interface ] --------------------------------------------------------------
 !/Makefile
 
 # ----- [ GitHub configuration ] -------------------------------------------------------------------
 !/.github/
+!/.github/CODEOWNERS
+!/.github/PULL_REQUEST_TEMPLATE.md
+!/.github/renovate.json5
 !/.github/workflows/
+!/.github/workflows/auto-merge.yaml
+!/.github/workflows/codeql.yaml
 !/.github/workflows/drift-gate.yaml
+!/.github/workflows/release-evidence.yaml
+!/.github/workflows/release-please.yaml
+!/.github/workflows/reusable-auto-merge.yaml
+!/.github/workflows/reusable-codeql.yaml
+!/.github/workflows/reusable-iac-security.yaml
+!/.github/workflows/reusable-release-evidence.yaml
+!/.github/workflows/reusable-release-please.yaml
+!/.github/workflows/reusable-scorecard.yaml
 !/.github/workflows/reusable-terraform-deploy.yaml
+!/.github/workflows/scorecard.yaml
+!/.github/workflows/security.yaml
 !/.github/workflows/self-ci.yaml
 
 # ----- [ OPA policies ] ---------------------------------------------------------------------------
@@ -43,17 +60,31 @@
 !/policies/opa/golden_terraform.rego
 !/policies/opa/golden_terraform_test.rego
 
+# ----- [ Tooling ] --------------------------------------------------------------------------------
+!/tools/
+!/tools/build_opa_input.py
+!/tools/check_docs_layout.py
+!/tools/ci/
+!/tools/ci/config.toml
+!/tools/ci/run_integration.py
+
 # ----- [ Documentation (Diátaxis + decision-records) ] --------------------------------------------
 !/docs/
+!/docs/README.md
 !/docs/tutorials/
 !/docs/tutorials/.gitkeep
 !/docs/how-to/
 !/docs/how-to/.gitkeep
+!/docs/how-to/develop-this-module.md
 !/docs/reference/
 !/docs/reference/.gitkeep
+!/docs/reference/invariants.md
+!/docs/reference/release-gates.md
 !/docs/reference/terraform.md
 !/docs/explanation/
 !/docs/explanation/.gitkeep
+!/docs/explanation/architecture.md
+!/docs/explanation/testing-strategy.md
 !/docs/explanation/threat-model.md
 !/docs/decision-records/
 !/docs/decision-records/README.md
@@ -76,7 +107,7 @@
 !/terraform/data.tf
 !/terraform/variables.tf
 !/terraform/locals.tf
-!/terraform/resources.tf
+!/terraform/main.tf
 !/terraform/outputs.tf
 !/terraform/fixtures/
 !/terraform/fixtures/tier_defaults.json
@@ -89,6 +120,12 @@
 !/examples/single-environment/terraform.tfvars.example
 !/examples/multi-environment/
 !/examples/multi-environment/terraform.tfvars.example
+
+# ----- [ Integration fixtures ] -------------------------------------------------------------------
+!/fixtures/
+!/fixtures/integration/
+!/fixtures/integration/basic/
+!/fixtures/integration/basic/README.md
 
 # ----- [ Terraform-generated artifacts that MUST stay ignored ] -----------------------------------
 # These would otherwise be allowed by directory rules above; the

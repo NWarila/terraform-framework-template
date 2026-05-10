@@ -21,3 +21,10 @@ repos:
         language: system
         pass_filenames: false
         files: ^terraform/.*\.tf$
+
+      - id: docs-layout
+        name: docs layout
+        entry: python tools/check_docs_layout.py
+        language: system
+        pass_filenames: false
+        files: ^docs/.*\.md$|^tools/check_docs_layout.py$
