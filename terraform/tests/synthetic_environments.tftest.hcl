@@ -51,24 +51,62 @@ run "single_environment_minimum" {
   # Tier defaults injected from the JSON fixture (data-source-injection
   # pattern). The "dev" tier sets retention_days=7 in fixtures/tier_defaults.json.
   assert {
-    condition     = output.environments["minimal"].retention_days == 7
-    error_message = "Expected retention_days=7 (dev tier default from data fixture); got ${output.environments["minimal"].retention_days}."
+    condition     = contains(keys(output.environments), "demo-minimal") && output.environments["demo-minimal"].resource_key == "demo-minimal"
+    error_message = "Expected environments output to be keyed by prefixed resource key demo-minimal."
+  }
+
+  assert {
+    condition     = random_pet.environment["demo-minimal"].keepers["environment_prefix"] == "demo"
+    error_message = "Expected random_pet environment resource address to use prefixed key demo-minimal."
+  }
+
+  assert {
+    condition     = output.environments["demo-minimal"].retention_days == 7
+    error_message = "Expected retention_days=7 (dev tier default from data fixture); got ${output.environments["demo-minimal"].retention_days}."
   }
 
   # Pet name is generated and non-empty.
   assert {
-    condition     = length(output.environments["minimal"].pet_name) > 0
+    condition     = length(output.environments["demo-minimal"].pet_name) > 0
     error_message = "Expected non-empty pet_name; got empty string."
   }
 
   # Created-at timestamp is a non-empty RFC3339 string.
   assert {
-    condition     = length(output.environments["minimal"].created_at) > 0
+    condition     = length(output.environments["demo-minimal"].created_at) > 0
     error_message = "Expected non-empty created_at; got empty string."
   }
 }
 
 # endregion --- [ Run 1: single environment, minimum required inputs ] -------------------- #
+
+# region ------ [ Run 1b: secret seed hashes into random_string keepers ] ----------------- #
+
+run "secret_seed_digest_rotates_random_string" {
+
+  command = plan
+
+  variables {
+    environment_prefix = "demo"
+    global_tag         = "test-secret-seed"
+    secret_seed        = "unit-test-seed"
+
+    all_environments = [
+      {
+        name  = "seeded"
+        owner = "test-suite"
+        tier  = "dev"
+      }
+    ]
+  }
+
+  assert {
+    condition     = random_string.environment_secret["demo-seeded"].keepers["secret_seed_digest"] == sha256("unit-test-seed")
+    error_message = "Expected secret_seed to be hashed into random_string keepers without storing the raw seed."
+  }
+}
+
+# endregion --- [ Run 1b: secret seed hashes into random_string keepers ] ----------------- #
 
 # region ------ [ Run 2: multi-environment with manifests + hooks ] ----------------------- #
 
@@ -127,13 +165,13 @@ run "multi_environment_with_iterative_children" {
 
   # Tier defaults differ per env: dev=7, staging=30.
   assert {
-    condition     = output.environments["alpha"].retention_days == 7
-    error_message = "Expected alpha (dev) retention_days=7; got ${output.environments["alpha"].retention_days}."
+    condition     = output.environments["demo-alpha"].retention_days == 7
+    error_message = "Expected alpha (dev) retention_days=7; got ${output.environments["demo-alpha"].retention_days}."
   }
 
   assert {
-    condition     = output.environments["beta"].retention_days == 30
-    error_message = "Expected beta (staging) retention_days=30; got ${output.environments["beta"].retention_days}."
+    condition     = output.environments["demo-beta"].retention_days == 30
+    error_message = "Expected beta (staging) retention_days=30; got ${output.environments["demo-beta"].retention_days}."
   }
 }
 
@@ -172,13 +210,13 @@ run "environment_with_certificate" {
   }
 
   assert {
-    condition     = output.environments["secured"].certificate_enabled == true
+    condition     = output.environments["demo-secured"].certificate_enabled == true
     error_message = "Expected secured.certificate_enabled=true; got false."
   }
 
   # The cert is real: validity dates are populated in state.
   assert {
-    condition     = length(tls_self_signed_cert.environment["secured"].cert_pem) > 0
+    condition     = length(tls_self_signed_cert.environment["demo-secured"].cert_pem) > 0
     error_message = "Expected non-empty cert_pem; got empty."
   }
 }
@@ -213,7 +251,7 @@ run "environment_with_rotation" {
   }
 
   assert {
-    condition     = output.environments["rotating"].rotation_enabled == true
+    condition     = output.environments["demo-rotating"].rotation_enabled == true
     error_message = "Expected rotating.rotation_enabled=true; got false."
   }
 }
