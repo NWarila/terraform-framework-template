@@ -4,8 +4,9 @@ name: Drift Gate
 # files are byte-identical to their canonical sources at SHA-pinned
 # revisions. Per nwarila-platform/.github ADR-0001 (three-tier ADR
 # model) this framework-example is a child repo of the org canonical
-# and must mirror its baseline files. Failure surfaces inline as
-# annotations in the PR's "Files changed" view.
+# and must mirror its baseline files, including community-health
+# policy docs. Failure surfaces inline as annotations in the PR's
+# "Files changed" view.
 
 on:
   pull_request:

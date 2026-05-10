@@ -1,0 +1,161 @@
+{
+  "version": "1",
+  "files": [
+    {
+      "source": ".editorconfig",
+      "target": ".editorconfig"
+    },
+    {
+      "source": ".gitattributes",
+      "target": ".gitattributes"
+    },
+    {
+      "source": ".gitignore",
+      "target": ".gitignore"
+    },
+    {
+      "source": ".markdownlint-cli2.jsonc",
+      "target": ".markdownlint-cli2.jsonc"
+    },
+    {
+      "source": ".pre-commit-config.yaml",
+      "target": ".pre-commit-config.yaml"
+    },
+    {
+      "source": ".terraform-docs.yml",
+      "target": ".terraform-docs.yml"
+    },
+    {
+      "source": ".tflint.hcl",
+      "target": ".tflint.hcl"
+    },
+    {
+      "source": "LICENSE",
+      "target": "LICENSE"
+    },
+    {
+      "source": "Makefile",
+      "target": "Makefile"
+    },
+    {
+      "source": "baseline-manifest.json",
+      "target": "baseline-manifest.json"
+    },
+    {
+      "source": "release-please-config.json",
+      "target": "release-please-config.json"
+    },
+    {
+      "source": ".github/CODEOWNERS",
+      "target": ".github/CODEOWNERS"
+    },
+    {
+      "source": ".github/PULL_REQUEST_TEMPLATE.md",
+      "target": ".github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "source": ".github/renovate.json5",
+      "target": ".github/renovate.json5"
+    },
+    {
+      "source": ".github/workflows/auto-merge.yaml",
+      "target": ".github/workflows/auto-merge.yaml"
+    },
+    {
+      "source": ".github/workflows/codeql.yaml",
+      "target": ".github/workflows/codeql.yaml"
+    },
+    {
+      "source": ".github/workflows/release-evidence.yaml",
+      "target": ".github/workflows/release-evidence.yaml"
+    },
+    {
+      "source": ".github/workflows/release-please.yaml",
+      "target": ".github/workflows/release-please.yaml"
+    },
+    {
+      "source": ".github/workflows/reusable-auto-merge.yaml",
+      "target": ".github/workflows/reusable-auto-merge.yaml"
+    },
+    {
+      "source": ".github/workflows/reusable-codeql.yaml",
+      "target": ".github/workflows/reusable-codeql.yaml"
+    },
+    {
+      "source": ".github/workflows/reusable-iac-security.yaml",
+      "target": ".github/workflows/reusable-iac-security.yaml"
+    },
+    {
+      "source": ".github/workflows/reusable-release-evidence.yaml",
+      "target": ".github/workflows/reusable-release-evidence.yaml"
+    },
+    {
+      "source": ".github/workflows/reusable-release-please.yaml",
+      "target": ".github/workflows/reusable-release-please.yaml"
+    },
+    {
+      "source": ".github/workflows/reusable-scorecard.yaml",
+      "target": ".github/workflows/reusable-scorecard.yaml"
+    },
+    {
+      "source": ".github/workflows/scorecard.yaml",
+      "target": ".github/workflows/scorecard.yaml"
+    },
+    {
+      "source": ".github/workflows/security.yaml",
+      "target": ".github/workflows/security.yaml"
+    },
+    {
+      "source": "docs/tutorials/.gitkeep",
+      "target": "docs/tutorials/.gitkeep"
+    },
+    {
+      "source": "docs/how-to/.gitkeep",
+      "target": "docs/how-to/.gitkeep"
+    },
+    {
+      "source": "docs/reference/.gitkeep",
+      "target": "docs/reference/.gitkeep"
+    },
+    {
+      "source": "docs/explanation/.gitkeep",
+      "target": "docs/explanation/.gitkeep"
+    },
+    {
+      "source": "docs/decision-records/template/.gitkeep",
+      "target": "docs/decision-records/template/.gitkeep"
+    },
+    {
+      "source": "docs/decision-records/repo/.gitkeep",
+      "target": "docs/decision-records/repo/.gitkeep"
+    },
+    {
+      "source": "tools/build_opa_input.py",
+      "target": "tools/build_opa_input.py"
+    },
+    {
+      "source": "tools/check_docs_layout.py",
+      "target": "tools/check_docs_layout.py"
+    },
+    {
+      "source": "tools/ci/config.toml",
+      "target": "tools/ci/config.toml"
+    },
+    {
+      "source": "tools/ci/run_integration.py",
+      "target": "tools/ci/run_integration.py"
+    },
+    {
+      "source": "policies/opa/golden_terraform.rego",
+      "target": "policies/opa/golden_terraform.rego"
+    },
+    {
+      "source": "policies/opa/golden_terraform_test.rego",
+      "target": "policies/opa/golden_terraform_test.rego"
+    },
+    {
+      "source": "fixtures/integration/basic/README.md",
+      "target": "fixtures/integration/basic/README.md"
+    }
+  ]
+}

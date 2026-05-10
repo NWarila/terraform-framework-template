@@ -8,7 +8,7 @@
 # This do-nothing showcase has no live platform to query, so the
 # data-source-injection pattern is demonstrated against a local JSON
 # fixture instead. The shape of the lookup, the way locals.tf consumes
-# the result, and the way resources.tf indirectly references the
+# the result, and the way main.tf indirectly references the
 # injected values is identical to a real framework.
 
 data "local_file" "tier_defaults" {

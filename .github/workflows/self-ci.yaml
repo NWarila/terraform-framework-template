@@ -9,6 +9,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  merge_group:
   workflow_dispatch:
 
 permissions:
@@ -19,10 +20,59 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  terraform-ci:
-    name: terraform ci (fmt + init + validate + test)
+  actionlint:
+    name: actionlint
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Run actionlint
+        uses: reviewdog/action-actionlint@6fb7acc99f4a1008869fa8a0f09cfca740837d9d # v1.72.0
+        with:
+          fail_level: error
+          reporter: github-check
+
+  markdownlint:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@6b51ade7a9e4a75a7ad929842dd298a3804ebe8b # v23.1.0
+        with:
+          globs: "**/*.md"
+
+  zizmor:
+    name: zizmor (Actions security)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+      - name: Install zizmor
+        # renovate: datasource=pypi depName=zizmor
+        run: python -m pip install --no-cache-dir zizmor==1.24.1
+      - name: Run zizmor
+        run: zizmor --persona regular .github/workflows/
+
+  terraform-ci:
+    name: terraform verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -31,7 +81,7 @@ jobs:
 
       - name: Setup Terraform
         # renovate: datasource=github-releases depName=hashicorp/terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
         with:
           terraform_version: "1.15.1"
           terraform_wrapper: false
@@ -50,7 +100,7 @@ jobs:
       - name: Install terraform-docs
         # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
         env:
-          TERRAFORM_DOCS_VERSION: "0.20.0"
+          TERRAFORM_DOCS_VERSION: "0.23.0"
         run: |
           set -euo pipefail
           curl -fsSL -o /tmp/td.tar.gz \
@@ -59,5 +109,18 @@ jobs:
           install -m 0755 /tmp/terraform-docs /usr/local/bin/terraform-docs
           terraform-docs --version
 
-      - name: make ci
-        run: make ci
+      - name: Install TFLint
+        # renovate: datasource=github-releases depName=terraform-linters/tflint
+        env:
+          TFLINT_VERSION: "0.62.0"
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/tflint
+          curl -fsSL -o /tmp/tflint.zip \
+            "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip"
+          unzip -q /tmp/tflint.zip -d /tmp/tflint
+          install -m 0755 /tmp/tflint/tflint /usr/local/bin/tflint
+          tflint --version
+
+      - name: make verify
+        run: make verify

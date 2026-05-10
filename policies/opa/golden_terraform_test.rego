@@ -83,6 +83,15 @@ test_docker_without_digest_denied if {
 
 # region ------ [ versions.tf required_version pinning ] ----------------------------------- #
 
+# Repos without Terraform code are still allowed to use the workflow
+# pinning subset of this policy.
+test_missing_versions_tf_allowed if {
+	count(golden_terraform.deny) == 0 with input as {
+		"workflows": {},
+		"files": {},
+	}
+}
+
 # Missing required_version is denied.
 test_missing_required_version_denied if {
 	denials := golden_terraform.deny with input as {

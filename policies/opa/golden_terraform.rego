@@ -89,6 +89,10 @@ uncommented_lines(path) := lines if {
 	]
 }
 
+has_versions_tf if {
+	_ := input.files["terraform/versions.tf"]
+}
+
 # endregion --- [ Helpers ] ---------------------------------------------------------------- #
 
 # region ------ [ Deny rules: workflow uses: pinning ] ------------------------------------- #
@@ -114,19 +118,22 @@ has_exact_required_version if {
 }
 
 deny contains msg if {
+	has_versions_tf
 	not has_exact_required_version
 	msg := "terraform/versions.tf must pin required_version with `= X.Y.Z` (template-tier ADR-template/0001)"
 }
 
 # Pessimistic constraint operator (~>) is forbidden in versions.tf.
 deny contains msg if {
-	versions := input.files["terraform/versions.tf"]
-	contains(versions, "~>")
+	has_versions_tf
+	line := uncommented_lines("terraform/versions.tf")[_]
+	contains(line, "~>")
 	msg := "terraform/versions.tf must not use `~>`; provider versions require exact `=` pins (template-tier ADR-template/0001)"
 }
 
 # Every provider version line in terraform/versions.tf must use an exact `=` pin.
 deny contains msg if {
+	has_versions_tf
 	line := uncommented_lines("terraform/versions.tf")[_]
 	regex.match(provider_version_line_re, line)
 	not regex.match(exact_provider_version_line_re, line)
