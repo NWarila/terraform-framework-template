@@ -14,3 +14,9 @@
 data "local_file" "tier_defaults" {
   filename = "${path.module}/fixtures/tier_defaults.json"
 }
+
+data "local_file" "runner_inventory" {
+  for_each = toset(local.runner_inventory_paths)
+
+  filename = "${path.module}/${each.value}"
+}

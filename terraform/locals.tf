@@ -7,6 +7,22 @@ locals {
   # demonstrating the same injection pattern (see data.tf).
   tier_defaults = jsondecode(data.local_file.tier_defaults.content)["tiers"]
 
+  # Runner-owned inventory overlaid by terraform-runner-template lands under
+  # terraform/repos/. Reading it here makes the framework/runner data boundary
+  # executable instead of decorative.
+  runner_inventory_paths = sort([
+    for path in fileset(path.module, "repos/**/*") : path
+    if !endswith(path, "/.gitkeep")
+  ])
+
+  runner_inventory = {
+    for path, file in data.local_file.runner_inventory : path => {
+      path           = path
+      content_sha256 = sha256(file.content)
+      bytes          = length(file.content)
+    }
+  }
+
   # Common decorations applied to every synthetic resource. The
   # global_tag + environment_prefix pair lets tests deterministically
   # verify which apply produced a given resource.

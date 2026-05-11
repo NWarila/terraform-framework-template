@@ -48,6 +48,16 @@ run "single_environment_minimum" {
     error_message = "Expected 0 lifecycle hooks when none were declared; got ${output.framework_summary.lifecycle_hooks_total}."
   }
 
+  assert {
+    condition     = output.framework_summary.runner_inventory_total >= 1
+    error_message = "Expected framework to consume at least one runner inventory file from terraform/repos/."
+  }
+
+  assert {
+    condition     = contains(keys(output.runner_inventory), "repos/public/reference-runner-inventory.yaml")
+    error_message = "Expected runner_inventory output to include repos/public/reference-runner-inventory.yaml."
+  }
+
   # Tier defaults injected from the JSON fixture (data-source-injection
   # pattern). The "dev" tier sets retention_days=7 in fixtures/tier_defaults.json.
   assert {

@@ -2,5 +2,7 @@
 # null, random, local, time, and tls. Source and version pins live in versions.tf;
 # no provider blocks are needed.
 #
-# This is intentional for module hygiene: empty provider blocks are deprecated
-# when this framework is consumed as a child module by runner integration.
+# This is intentional whether the framework is run as the root module by the
+# reusable deploy workflow or as a child module by the runner integration tests:
+# empty provider blocks add no configuration and make provider inheritance less
+# clear.

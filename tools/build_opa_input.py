@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build OPA input from this repository's real files.
 
-The golden_terraform policy expects a compact JSON document containing
-workflow `uses:` references and selected file contents. This script turns the
+The repo_hygiene policy expects a compact JSON document containing
+workflow `uses:` references plus selected file contents. This script turns the
 checked-out repo into that input so `opa eval` enforces policy against the
 actual files under review, not only policy unit-test fixtures.
 """
@@ -51,12 +51,28 @@ def collect_workflow_uses(repo_root: Path) -> dict[str, list[dict[str, Any]]]:
     return workflows
 
 
+def collect_workflow_files(repo_root: Path) -> dict[str, str]:
+    workflows_dir = repo_root / ".github" / "workflows"
+    files: dict[str, str] = {}
+    if not workflows_dir.is_dir():
+        return files
+
+    paths: list[Path] = []
+    for pattern in WORKFLOW_GLOBS:
+        paths.extend(workflows_dir.glob(pattern))
+
+    for path in sorted(set(paths)):
+        files[path.relative_to(repo_root).as_posix()] = path.read_text(encoding="utf-8")
+    return files
+
+
 def collect_files(repo_root: Path) -> dict[str, str]:
     files: dict[str, str] = {}
     for rel in POLICY_FILE_PATHS:
         path = repo_root / rel
         if path.is_file():
             files[rel] = path.read_text(encoding="utf-8")
+    files.update(collect_workflow_files(repo_root))
     return files
 
 

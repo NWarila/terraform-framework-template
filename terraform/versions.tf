@@ -3,7 +3,7 @@ terraform {
   # Specify the required Terraform version. Per template-tier ADR-0001
   # (pin Terraform and provider versions exactly), exact pins only —
   # the `~>` pessimistic operator is rejected by the OPA policy in
-  # policies/opa/golden_terraform.rego.
+  # policies/opa/repo_hygiene.rego.
   required_version = "= 1.15.1"
 
   # Specify the required providers. All five are official HashiCorp
