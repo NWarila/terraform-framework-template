@@ -15,6 +15,12 @@
 
 `terraform-framework-template` is a reference framework, not a production deployment. Its own Terraform module MUST stay credential-free and cost-free: local backend, no cloud accounts, no secrets, and only synthetic or local providers. Derivative frameworks replace the synthetic resources with real providers and own the provider-specific threat model, backend policy, and credential path in their repository tier.
 
+The reusable deploy workflow MAY also support caller-supplied remote backend
+configuration for trusted runner workflows. That support does not change the
+reference framework's own self-validation boundary: PR/CI validation remains
+credential-free, and remote backend credentials are supplied only by the calling
+runner repository.
+
 ## Context and Problem Statement
 
 This repository has two jobs that pull in opposite directions:
@@ -51,7 +57,12 @@ This repository's own Terraform module MUST:
 - Avoid any provider that requires external credentials or accounts.
 - Avoid repository secrets for self-validation.
 - Exercise realistic Terraform patterns with synthetic providers and local artifacts.
-- Keep production backend and provider decisions out of this template unless a future ADR supersedes this one.
+- Keep production provider decisions out of this template unless a future ADR supersedes this one.
+
+The reusable deploy workflow MAY accept caller-owned OIDC and S3 backend inputs
+for trusted deploy events. When it does, it MUST keep backend identifiers masked,
+avoid uploading local state artifacts, and allow callers to suppress binary plan
+artifacts because real Terraform plans can contain sensitive values.
 
 Derivative frameworks MUST replace the synthetic implementation details with their real provider, backend, tests, and threat-model addenda. They SHOULD keep the same command surface (`make ci`, `make integration`, generated docs, OPA policy, and reusable workflow contracts) unless they record a superseding ADR.
 
@@ -85,7 +96,9 @@ Derivative frameworks MUST replace the synthetic implementation details with the
 1. The reference `terraform/versions.tf` provider set MUST remain limited to providers that work without external service credentials.
 2. `ci.yaml` MUST NOT require repository secrets to run the framework validation path.
 3. `make verify` MUST continue to exercise a real Terraform lifecycle without external services.
-4. Production provider or backend adoption in this template MUST be recorded as a superseding ADR.
+4. Production provider adoption in this template MUST be recorded as a superseding ADR.
+5. Remote backend support in reusable workflows MUST remain caller-supplied and
+   disabled by default for PR/CI validation.
 
 ## Consequences
 
@@ -98,7 +111,9 @@ Derivative frameworks MUST replace the synthetic implementation details with the
 ### Negative
 
 - Provider-specific IAM, rate-limit, quota, and backend behavior are not proven here.
-- Some production concerns are documented as patterns rather than executed by this repository.
+- This repository's own PR/CI validation still does not prove cloud-provider
+  IAM, quota, or API behavior. Those checks run only when a trusted runner
+  supplies backend credentials.
 
 ### Neutral
 
@@ -122,6 +137,9 @@ None (current).
 
 - [`87323cd`](https://github.com/NWarila/terraform-framework-template/commit/87323cdbe7a9ae73508d9d00e9fe061f3a4d2474) introduced the credential-free synthetic reference framework.
 - [`075cef1`](https://github.com/NWarila/terraform-framework-template/commit/075cef1554c658b284556b1d8b6fb6a3ba695766) documented the provider-free threat model around that reference shape.
+- The v1.0.0 readiness pass extended `reusable-terraform-deploy.yaml` so trusted
+  callers can prove the S3 backend path while this framework's own CI remains
+  credential-free.
 
 ## Related ADRs
 
