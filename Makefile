@@ -2,7 +2,7 @@ PYTHON ?= python3
 TFLINT ?= tflint
 INTEGRATION_CASE ?= basic
 
-.PHONY: fmt fmt-check init validate tflint ruff yamllint test opa-test opa-policy manifest-check docs docs-diff docs-layout lint policy docs-check integration ci verify
+.PHONY: fmt fmt-check init validate tflint ruff yamllint test workflow-helper-tests opa-test opa-policy opa-plan manifest-check docs docs-diff docs-layout lint policy docs-check integration ci verify
 
 # Mutating: rewrites HCL in place. Use locally before committing.
 fmt:
@@ -23,12 +23,10 @@ tflint:
 	$(TFLINT) --config "$(CURDIR)/.tflint.hcl" --chdir terraform
 
 ruff:
-	$(PYTHON) -m pip install --no-cache-dir ruff==0.13.0
-	$(PYTHON) -m ruff check tools/
+	$(PYTHON) tools/verify.py ruff
 
 yamllint:
-	$(PYTHON) -m pip install --no-cache-dir yamllint==1.35.1
-	$(PYTHON) -m yamllint -d "{ extends: relaxed, rules: { line-length: disable, document-start: disable, comments: disable, truthy: {check-keys: false} } }" .github/workflows/
+	$(PYTHON) tools/verify.py yamllint
 
 # Real apply against synthetic resources via `terraform test`.
 # Generates a real terraform.tfstate inside the test sandbox,
@@ -38,36 +36,46 @@ yamllint:
 test:
 	terraform -chdir=terraform test
 
+workflow-helper-tests:
+	shellcheck tools/ci/*.sh
+	$(PYTHON) tools/ci/check_workflow_run_inputs.py .github/workflows
+	bats tests/ci/*.bats
+
 # OPA policy tests. Exercises every deny rule in
-# policies/opa/golden_terraform.rego against pass + fail fixtures.
+# policies/opa/repo_hygiene.rego against pass + fail fixtures.
 opa-test:
 	opa test policies/opa
 
 # OPA policy enforcement. Evaluates the policy against this repo's
 # actual workflows and Terraform version pins.
 opa-policy:
-	$(PYTHON) tools/build_opa_input.py | opa eval --fail-defined --format pretty --stdin-input --data policies/opa "data.golden_terraform.deny[_]"
+	$(PYTHON) tools/verify.py opa-policy
 
-# Validates baseline-manifest.json against drift-gate's stdlib
-# schema. Derivative frameworks use this manifest to mirror the
-# template-tier scaffold byte-for-byte.
+# OPA plan enforcement. Builds a real tfplan from the multi-environment
+# example, normalizes `terraform show -json`, and evaluates planned
+# Terraform resources against policies/opa/framework_plan.rego.
+opa-plan:
+	$(PYTHON) tools/verify.py opa-plan
+
+# Validates baseline-manifest.json against the drift-gate manifest
+# schema without installing drift-gate during CI. Derivative frameworks
+# use this manifest to mirror the template-tier scaffold byte-for-byte.
 manifest-check:
-	$(PYTHON) -m pip install --no-cache-dir 'git+https://github.com/NWarila/drift-gate@d835ae411f1e55e25b2b6c079d5891e7345a043c'
-	$(PYTHON) -c "from pathlib import Path; from baseline.manifest import load_manifest; m = load_manifest(Path('baseline-manifest.json')); print(f'manifest: version={m.version}, files={len(m.files)}'); missing = [f.source for f in m.files if not Path(f.source).is_file()]; assert not missing, f'sources missing: {missing}'; print('all sources resolve on disk')"
+	$(PYTHON) tools/verify.py manifest-check
 
 # Mutating: regenerates the BEGIN_TF_DOCS / END_TF_DOCS block in
 # docs/reference/terraform.md from the HCL in terraform/.
 docs:
-	terraform-docs --config .terraform-docs.yml terraform
+	$(PYTHON) tools/verify.py docs
 
 # Non-mutating: fails if docs/reference/terraform.md is out of sync.
 # Run by CI to enforce that committed terraform-docs output matches
 # what the current HCL would produce.
 docs-diff:
-	terraform-docs --config .terraform-docs.yml --output-check terraform
+	$(PYTHON) tools/verify.py docs-diff
 
 docs-layout:
-	$(PYTHON) tools/check_docs_layout.py
+	$(PYTHON) tools/verify.py docs-layout
 
 lint:
 	$(MAKE) fmt-check
@@ -80,21 +88,17 @@ lint:
 policy:
 	$(MAKE) opa-test
 	$(MAKE) opa-policy
+	$(MAKE) opa-plan
 
 docs-check:
 	$(MAKE) docs-diff
 	$(MAKE) docs-layout
 
 integration:
-	$(PYTHON) tools/ci/run_integration.py --case $(INTEGRATION_CASE)
+	$(PYTHON) tools/verify.py integration --case $(INTEGRATION_CASE)
 
 ci:
-	$(MAKE) lint
-	$(MAKE) test
-	$(MAKE) policy
-	$(MAKE) docs-check
-	$(MAKE) manifest-check
+	$(PYTHON) tools/verify.py ci
 
 verify:
-	$(MAKE) ci
-	$(MAKE) integration
+	$(PYTHON) tools/verify.py verify --case $(INTEGRATION_CASE)

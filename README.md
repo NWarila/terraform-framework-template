@@ -6,10 +6,10 @@ The **do-nothing reference framework** for the NWarila portfolio. GitHub-flagged
 
 | | This repo | A real framework |
 | --- | --- | --- |
-| Demonstrates the framework pattern | ✅ | ✅ |
-| Manages real cloud / SaaS infrastructure | ❌ — by design | ✅ |
-| Used as the canonical reference for derivative frameworks | ✅ | — |
-| Suitable for "consume me to deploy something" | ❌ | ✅ |
+| Demonstrates the framework pattern | Yes | Yes |
+| Manages real cloud / SaaS infrastructure | No, by design | Yes |
+| Used as the canonical reference for derivative frameworks | Yes | N/A |
+| Suitable for "consume me to deploy something" | No | Yes |
 
 If you want to deploy real infrastructure, use a real framework like [`nwarila-platform/proxmox-terraform-framework`](https://github.com/nwarila-platform/proxmox-terraform-framework). **This repo's job is to teach the pattern**, not to do work.
 
@@ -19,7 +19,7 @@ This framework follows the "packer-aligned" style established in [`nwarila-platf
 
 | File | Role |
 | --- | --- |
-| [`terraform/versions.tf`](terraform/versions.tf) | `required_version` + `required_providers` (exact pins per template-tier ADR) |
+| [`terraform/versions.tf`](terraform/versions.tf) | `required_version` + `required_providers` (exact pins per [ADR-template/0001](docs/decision-records/template/0001-pin-terraform-and-provider-versions-exactly.md)) |
 | [`terraform/providers.tf`](terraform/providers.tf) | Provider blocks. Reference variables directly, no logic. |
 | [`terraform/backend.tf`](terraform/backend.tf) | Backend config. Local for this showcase; commented S3/GCS/azurerm/HCP variants for real frameworks. |
 | [`terraform/data.tf`](terraform/data.tf) | Data sources. Demonstrates the data-source-injection pattern. |
@@ -38,7 +38,7 @@ This framework follows the "packer-aligned" style established in [`nwarila-platf
 | Sensitive variables with operational-context descriptions | `variable "secret_seed"` in [`variables.tf`](terraform/variables.tf) |
 | List-of-objects mega-variable with nested optionals | `manifests`, `lifecycle_hooks` in [`variables.tf`](terraform/variables.tf) |
 | Single-optional sub-object (becomes splat-on-optional dynamic block in main.tf) | `rotation`, `certificate`, `pet` in [`variables.tf`](terraform/variables.tf) |
-| `<! Note: ... !>` inline comments documenting omitted/computed fields | throughout |
+| Plain HCL comments documenting omitted/computed fields | throughout |
 | Data-source-injection pattern | [`data.tf`](terraform/data.tf) → [`locals.tf`](terraform/locals.tf) → [`main.tf`](terraform/main.tf) |
 | Tier-based defaults (per-env override falls through to data-source default) | [`locals.tf`](terraform/locals.tf), see `retention_days` / `pet.length` |
 | Flat composite-keyed for_each map (nested list-of-objects → iterable resource expansion) | [`locals.tf`](terraform/locals.tf), `manifests_flat`, `lifecycle_hooks_flat` |
@@ -54,17 +54,29 @@ This framework follows the "packer-aligned" style established in [`nwarila-platf
 
 ```sh
 # Repo-local quality gate.
-make ci
+python tools/verify.py ci
 
 # Exercise the quickstart input in an ephemeral workspace.
-make integration
+python tools/verify.py integration
 ```
 
-`make ci` runs Terraform formatting, init, validate, TFLint, tests, OPA policy checks, and terraform-docs drift checks. It does not read a local `terraform/terraform.tfvars`; its Terraform coverage comes from the committed tests under [`terraform/tests/`](terraform/tests/).
+`python tools/verify.py ci` runs Terraform formatting, init, validate, TFLint, tests, source-aware OPA checks, plan-aware OPA checks, and terraform-docs drift checks. It does not read a local `terraform/terraform.tfvars`; its Terraform coverage comes from the committed tests under [`terraform/tests/`](terraform/tests/) plus the multi-environment plan fixture in [`examples/multi-environment/terraform.tfvars.example`](examples/multi-environment/terraform.tfvars.example).
 
-`make integration` builds an ephemeral workspace under `.tmp/ci/integration/` from `terraform/`, copies [`examples/single-environment/terraform.tfvars.example`](examples/single-environment/terraform.tfvars.example) into that workspace, and runs the Terraform-facing gates against the assembled module. `make verify` runs both layers.
+`python tools/verify.py integration` builds an ephemeral workspace under `.tmp/ci/integration/` from `terraform/`, copies [`examples/single-environment/terraform.tfvars.example`](examples/single-environment/terraform.tfvars.example) into that workspace, and runs the Terraform-facing gates against the assembled module. `python tools/verify.py verify` runs both layers.
 
 State produced by `terraform test` lives inside the test sandbox and is torn down on completion.
+
+## New Framework Checklist
+
+For a real framework derived from this template, edit these first:
+
+1. `README.md` and repo-specific docs.
+2. `terraform/` provider/resource implementation.
+3. `examples/` and generated `docs/reference/terraform.md`.
+4. `docs/decision-records/repo/` for local decisions.
+5. Optional release layer, only if the repo publishes versioned releases.
+
+The mirroring rules live in [`docs/reference/mirroring.md`](docs/reference/mirroring.md).
 
 ## Normalized repo interface
 
@@ -73,11 +85,11 @@ This repo uses the same validation command surface as the Terraform runner templ
 | Command | Purpose |
 | --- | --- |
 | `make lint` | Repo-local static checks: fmt, init, validate, TFLint, Python tools, workflow YAML. |
-| `make policy` | OPA policy tests plus policy evaluation against real repo files. |
+| `make policy` | OPA policy tests plus source-aware and plan-aware policy evaluation. |
 | `make docs-check` | terraform-docs drift check plus Diataxis/ADR documentation layout. |
-| `make ci` | Repo-local quality gate. |
-| `make integration` | Ephemeral framework workspace assembled from `terraform/` and `examples/`. |
-| `make verify` | Full local verification: `ci` plus `integration`. |
+| `python tools/verify.py ci` | Repo-local quality gate. |
+| `python tools/verify.py integration` | Ephemeral framework workspace assembled from `terraform/` and `examples/`. |
+| `python tools/verify.py verify` | Full local verification: `ci` plus `integration`. |
 
 To see the framework apply against richer input:
 
@@ -92,7 +104,7 @@ ls -la terraform/.synthetic-output/*/
 
 ## State backend
 
-This showcase uses the **local backend** so the example always works without external setup. Production frameworks should use a remote backend with native state locking. See the commented variants in [`terraform/backend.tf`](terraform/backend.tf) for canonical S3, GCS, azurerm, and HCP Terraform configurations.
+This showcase uses the **local backend** so the example always works without external setup, per [ADR-template/0002](docs/decision-records/template/0002-keep-reference-framework-credential-free.md). Production frameworks should use a remote backend with native state locking. See the commented variants in [`terraform/backend.tf`](terraform/backend.tf) for canonical S3, GCS, azurerm, and HCP Terraform configurations.
 
 ## Folding markers (`#region` / `#endregion`)
 

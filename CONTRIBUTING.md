@@ -39,6 +39,20 @@ Use [Discussions](https://github.com/NWarila/.github/discussions) for questions,
 - Links to a related issue when one exists
 - Includes testing evidence appropriate to the change
 
+### Local pre-commit prerequisites
+
+This repository's `.pre-commit-config.yaml` uses pinned upstream hooks for
+Python, YAML, workflow, shell, and Markdown linting. `pre-commit run
+--all-files` installs those hook environments automatically.
+
+A few hooks intentionally remain `language: system` because they validate this
+Terraform module with local project tools rather than generic lint packages:
+
+- `terraform`
+- `terraform-docs`
+- `tflint`
+- `bats`
+
 ## Code of conduct
 
 All contributors are expected to follow the project's code of conduct. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details.

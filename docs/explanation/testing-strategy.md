@@ -2,15 +2,16 @@
 
 ## What the tests cover
 
-This template repo's `self-ci.yaml` exercises the framework pattern and its support tooling:
+This template repo's `ci.yaml` exercises the framework pattern and its support tooling:
 
 | Layer | Job or target | What it proves |
 | --- | --- | --- |
-| Terraform module | `make verify` | `fmt`, `init`, `validate`, TFLint, `terraform test`, docs drift, policy, and integration all pass. |
+| Terraform module | `python tools/verify.py verify` | `fmt`, `init`, `validate`, TFLint, `terraform test`, source-aware OPA, plan-aware OPA, docs drift, and integration all pass. |
 | Workflow YAML | `actionlint` | Workflow files parse and follow GitHub Actions semantics. |
 | Workflow security | `zizmor` | Workflow code avoids known dangerous Actions patterns. |
 | YAML data | `yamllint` | Workflow YAML is valid and consistently shaped. |
 | Python tools | `ruff` | CI helper scripts lint clean. |
+| Terraform plan policy | `make opa-plan` | `framework_plan` evaluates a real multi-environment `terraform plan` produced from the example fixture. |
 | Template manifest | `manifest-check` | The template-tier scaffold manifest loads and every source path exists. |
 | Markdown | `markdownlint` | Documentation lints clean. |
 | Documentation layout | `docs-layout` | Markdown stays inside the Diataxis and ADR directory structure. |

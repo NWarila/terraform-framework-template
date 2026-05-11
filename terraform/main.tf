@@ -9,10 +9,10 @@ resource "random_pet" "environment" {
   length    = each.value["pet"]["length"]
   separator = each.value["pet"]["separator"]
   prefix    = each.value["pet"]["prefix"]
-  keepers = {
-    environment_prefix = var.environment_prefix
-    tier               = each.value["tier"]
-  }
+  keepers = merge(
+    each.value["common_triggers"],
+    { pet_length = tostring(each.value["pet"]["length"]) },
+  )
 }
 
 # random_string — per environment. Synthetic per-env "secret"; output as
@@ -125,7 +125,7 @@ resource "tls_self_signed_cert" "environment" {
   is_ca_certificate     = each.value["certificate"]["is_ca_certificate"]
   set_subject_key_id    = each.value["certificate"]["set_subject_key_id"]
   allowed_uses          = each.value["certificate"]["allowed_uses"]
-  # subject = <! Note: Is 'dynamic' object located below !>
+  # subject is emitted by the dynamic block below.
 
   #region ------ [ Conditional Block Properties ] ------------------------------------------ #
 

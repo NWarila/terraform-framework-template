@@ -13,16 +13,8 @@ Install the same toolchain CI uses:
 ## Development loop
 
 ```sh
-# Terraform-facing checks
-make lint
-make test
-
-# Policy and docs
-make policy
-make docs-check
-
-# Full local verification
-make verify
+python tools/verify.py ci
+python tools/verify.py integration
 ```
 
 Use `make docs` after editing Terraform inputs, outputs, or variables; `make docs-check` verifies the committed docs are current.

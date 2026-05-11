@@ -50,14 +50,18 @@ on:
         description: |
           Newline-separated `<consumer-src>=><framework-dst>` entries
           describing what to copy from the runner into the framework
-          tree before terraform sees it. Trailing slashes denote
-          directories; contents (including dotfiles) are copied
-          recursively. Example:
+          tree before terraform sees it. Directory sources are copied as
+          contents, including dotfiles. Trailing slashes are accepted for
+          readability but have no separate meaning. Example:
 
-            repos/public/=>terraform/repos/public/
-            repos/private/=>terraform/repos/private/
+            repos/public=>terraform/repos/public
+            repos/private=>terraform/repos/private
 
           Empty input is allowed (rare — most runners overlay something).
+          Paths must be relative and must not contain `..` traversal segments.
+          Destinations must stay under `terraform/repos/` or
+          `terraform/fixtures/runtime/`; overlay entries cannot modify
+          framework implementation files or workflow files.
         required: false
         type: string
         default: ""
@@ -83,6 +87,7 @@ on:
           Optional path within the consumer to a tfvars file that
           should be passed to terraform plan/apply via -var-file.
           Path is interpreted relative to the consumer checkout.
+          Absolute paths and `..` traversal segments are rejected.
           Empty means no -var-file argument is added.
         required: false
         type: string
@@ -121,14 +126,6 @@ jobs:
           ref="${OVERRIDE_REF:-$FALLBACK_REF}"
           echo "consumer_repo=${repo}" >> "${GITHUB_OUTPUT}"
           echo "consumer_ref=${ref}"   >> "${GITHUB_OUTPUT}"
-          # framework_ref must be a 40-char SHA — same rule the OPA
-          # policy enforces. We re-validate here so misconfigured
-          # callers fail fast instead of getting a confusing checkout
-          # error later.
-          if ! [[ "${{ inputs.framework_ref }}" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "::error::framework_ref must be a 40-character SHA, got '${{ inputs.framework_ref }}'"
-            exit 1
-          fi
 
       - name: Check out framework at framework_ref
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -138,6 +135,11 @@ jobs:
           path: framework
           fetch-depth: 1
           persist-credentials: false
+
+      - name: Validate framework_ref
+        env:
+          FRAMEWORK_REF: ${{ inputs.framework_ref }}
+        run: bash framework/tools/ci/validate_framework_ref.sh "${FRAMEWORK_REF}"
 
       - name: Check out consumer (runner) at consumer_ref
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -154,36 +156,7 @@ jobs:
           OVERLAY_PATHS: ${{ inputs.overlay_paths }}
         run: |
           set -euo pipefail
-          # Newline-separated `src=>dst` entries; blank lines and `#`
-          # comments are skipped. cp -a preserves modes/symlinks; the
-          # `${src}/.` form copies directory CONTENTS (including dotfiles)
-          # into ${dst} when src is a directory.
-          while IFS= read -r line; do
-            entry="${line%%#*}"
-            entry="$(echo "${entry}" | xargs)"
-            [ -z "${entry}" ] && continue
-            if [[ "${entry}" != *"=>"* ]]; then
-              echo "::error::overlay entry missing '=>' separator: ${entry}"
-              exit 1
-            fi
-            src="${entry%%=>*}"
-            dst="${entry##*=>}"
-            src="$(echo "${src}" | xargs)"
-            dst="$(echo "${dst}" | xargs)"
-            src_path="consumer/${src}"
-            dst_path="framework/${dst}"
-            if [ ! -e "${src_path}" ]; then
-              echo "::error::overlay source missing: ${src_path}"
-              exit 1
-            fi
-            mkdir -p "${dst_path}"
-            if [ -d "${src_path}" ]; then
-              cp -a "${src_path}/." "${dst_path}/"
-            else
-              cp -a "${src_path}" "${dst_path}"
-            fi
-            echo "overlay: ${src_path} -> ${dst_path}"
-          done <<< "${OVERLAY_PATHS}"
+          bash framework/tools/ci/apply_overlay.sh consumer framework "${OVERLAY_PATHS}"
 
       - name: Setup Terraform
         # renovate: datasource=github-releases depName=hashicorp/terraform
@@ -205,7 +178,8 @@ jobs:
           set -euo pipefail
           args=( -input=false -lock-timeout=300s -out=tfplan -detailed-exitcode )
           if [ -n "${TFVARS_FILE}" ]; then
-            args+=( -var-file="../../consumer/${TFVARS_FILE}" )
+            tfvars_arg="$(bash ../tools/ci/terraform_tfvars_args.sh "${TFVARS_FILE}")"
+            args+=( "${tfvars_arg}" )
           fi
           set +e
           terraform plan "${args[@]}"

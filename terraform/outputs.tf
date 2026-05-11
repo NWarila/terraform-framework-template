@@ -44,8 +44,14 @@ output "framework_summary" {
     environments_rotating  = length(time_rotating.environment_rotation)
     manifests_total        = length(local.manifests_flat)
     lifecycle_hooks_total  = length(local.lifecycle_hooks_flat)
+    runner_inventory_total = length(local.runner_inventory)
     framework_decorations  = local.framework_decorations
   }
+}
+
+output "runner_inventory" {
+  description = "Runner-owned files discovered under terraform/repos/, keyed by repository-relative path. This proves overlays are consumed by the framework rather than merely copied beside it."
+  value       = local.runner_inventory
 }
 
 #endregion --- [ Aggregate / Roll-up Outputs ] ------------------------------------------- #

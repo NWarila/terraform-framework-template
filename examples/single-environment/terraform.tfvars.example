@@ -1,4 +1,4 @@
-# Smallest possible valid input to terraform-framework-example.
+# Smallest possible valid input to terraform-framework-template.
 # Copy to `terraform.tfvars` (gitignored) and run `terraform apply`.
 
 environment_prefix = "demo"
