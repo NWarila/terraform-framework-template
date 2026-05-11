@@ -12,7 +12,7 @@ PRs to `main` on this template must pass:
 - `CodeQL` (`security.yaml`)
 - `OpenSSF Scorecard` (`security.yaml`)
 
-The framework deploy reusable is exercised by runner repositories that call it with a pinned `framework_ref`. This repo's `python tools/verify.py integration` covers the local framework assembly path.
+The framework deploy reusable is exercised by runner repositories that call it with a pinned `framework_ref`. This repo's `python tools/verify.py integration` covers the local framework assembly path; trusted runner repositories cover the full S3/OIDC deploy path on `main` with caller-owned secrets.
 
 Release evidence, when `release.yaml` is enabled, uploads the evidence bundle
 and SPDX SBOM as release assets and emits GitHub artifact attestations for

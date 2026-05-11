@@ -22,4 +22,4 @@ Derivative frameworks exercise this template by retaining the same `make` interf
 
 - Real provider credentials and external services; this reference framework uses synthetic providers only.
 - Repository ruleset enforcement, branch protection, and required status checks; those live in GitHub settings.
-- A production remote backend; the reference keeps local state so the template is runnable without setup.
+- A production remote backend in PR/self-CI; the reference keeps local state so the template is runnable without setup. Trusted runner deploy workflows can exercise the reusable deploy path with caller-supplied S3/OIDC configuration after merge.
