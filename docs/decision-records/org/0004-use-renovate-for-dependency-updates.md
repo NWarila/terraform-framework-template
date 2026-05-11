@@ -210,8 +210,15 @@ Pending. Each type-template's `.github/renovate.json5` is the source of truth fo
 ## Related ADRs
 
 - [ADR-0001](0001-use-architecture-decision-records.md) — establishes the format and three-tier scope structure of decision records. The per-template-baseline pattern in this ADR mirrors that three-tier model: stack-level concerns live at the template tier.
+- [ADR-0003](0003-use-deny-all-gitignore-strategy.md) — establishes the deny-all `.gitignore` strategy. Renovate config files are explicitly allowlisted in adopting repositories per ADR-0003.
 - [`NWarila/terraform-runner-template` ADR-template/0001](https://github.com/NWarila/terraform-runner-template/blob/main/docs/decision-records/template/0001-pin-terraform-and-provider-versions-exactly.md) — the template-tier decision pinning Terraform and provider versions exactly. The Terraform-runner template's `renovate.json5` sets `terraform.rangeStrategy: "pin"` per that ADR. Per-template baselines mean each stack records its own analogous decisions in its own ADRs.
 
 ## Compliance Notes
 
-None.
+This ADR preserves the SHA-pin policy (encoded in the shared baseline as `github-actions.pinDigests: true`). It does not modify branch-protection or PR-review requirements: every Renovate PR is subject to the same `main`-branch protections as a human-authored PR, including required status checks. Future ADRs that adopt additional managers (e.g., `pre-commit`, `pip`, `docker`) inherit this ADR's defaults and need only document scope-specific divergence in repo-local config.
+
+| Framework              | Control / Practice ID                                                | Potential Evidence Contribution                                                                                                |
+| ---------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| NIST SP 800-53 Rev. 5  | SI-2 (Flaw Remediation)                                              | Renovate's automated update PRs contribute to the timely application of patches and security fixes across the org.            |
+| NIST SP 800-53 Rev. 5  | CM-3 (Configuration Change Control)                                  | The shared-baseline pattern records org-wide dependency-management policy in source control with PR review history.            |
+| NIST SP 800-218 (SSDF) | PW.4 (Reuse Existing, Well-Secured Software When Feasible)           | Tracking dependency updates with SHA-pin retention preserves the supply-chain integrity posture for reused software.           |
