@@ -19,9 +19,9 @@ Derivative frameworks replace the synthetic providers, resources, repo-specific 
 
 - `python tools/verify.py ci` proves formatting, init, validate, TFLint, tests, OPA policy, docs, and manifest health.
 - `python tools/verify.py integration` assembles an ephemeral framework workspace from `terraform/` plus an example tfvars file and runs the Terraform-facing gates.
-- Runner repos call this framework's deploy reusable with a pinned `framework_ref` and explicit overlay paths.
+- Runner repos call this framework's deploy reusable with a pinned `framework_ref` and explicit overlay paths. Pull requests normally use the local backend for plan-only validation. Trusted `main` deploys can opt into the caller-supplied S3 backend mode to prove OIDC, locking, apply, and remote state verification.
 
-The reference framework intentionally uses a local backend so the template can run without credentials. Production frameworks should use the backend required by their consuming stack policy.
+The reference framework's own validation intentionally uses a local backend so the template can run without credentials. Production frameworks should use the backend required by their consuming stack policy, and trusted runner deploys can pass those backend settings to the reusable workflow at runtime.
 
 ## External dependencies
 
