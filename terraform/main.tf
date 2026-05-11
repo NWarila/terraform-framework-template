@@ -93,7 +93,7 @@ resource "time_rotating" "environment_rotation" {
 }
 
 # tls_private_key — only for environments that opted into a certificate.
-# Generates an EC key pair (NIST P-256) — synthetic but real crypto;
+# Generates a P-256 EC key pair — synthetic but real crypto;
 # state ends up holding the actual PEM-encoded private key (sensitive).
 
 resource "tls_private_key" "environment" {

@@ -146,6 +146,32 @@ variable "all_environments" {
     condition     = length(distinct([for e in var.all_environments : e.name])) == length(var.all_environments)
     error_message = "Environment names must be unique within all_environments."
   }
+
+  validation {
+    condition = alltrue(flatten([
+      for e in var.all_environments : [
+        for m in coalesce(e.manifests, []) :
+        can(regex("^0?([0-5][0-7][0-7]|6[0-3][0-7]|64[0-4])$", m.permissions))
+      ]
+    ]))
+    error_message = "Manifest permissions must be no more permissive than 0644."
+  }
+
+  validation {
+    condition = alltrue([
+      for e in var.all_environments :
+      e.certificate == null ? true : e.certificate.validity_period_hours <= 8760
+    ])
+    error_message = "Certificate validity_period_hours must be <= 8760."
+  }
+
+  validation {
+    condition = alltrue([
+      for e in var.all_environments :
+      e.certificate == null ? true : e.certificate.is_ca_certificate == false
+    ])
+    error_message = "Synthetic environment certificates must not be CA certificates."
+  }
 }
 
 #endregion --- [ Synthetic Environments: list(object({...})) Mega-Variable ] -------------- #

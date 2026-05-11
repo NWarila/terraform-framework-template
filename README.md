@@ -1,6 +1,28 @@
 # terraform-framework-template
 
-The **do-nothing reference framework** for the NWarila portfolio. GitHub-flagged as a template — derivative frameworks seed from this and replace the synthetic providers with their real ones. Showcases every Terraform-framework pattern (modules, variables, outputs, validation, tests, terraform-docs, OPA, plan/apply lifecycle, drift detection, sensitive output handling) using **synthetic providers only** (`null`, `random`, `local`, `time`, `tls`). Generates real `terraform.tfstate`, `terraform apply` runs end-to-end, `terraform test` exercises real assertions — all without external services, accounts, secrets, or recurring cost.
+Reference Terraform framework template for derivative frameworks: it demonstrates the repo shape, validation surface, reusable workflows, and Terraform patterns using only synthetic providers (`null`, `random`, `local`, `time`, `tls`) so `terraform test` and local verification run without accounts, secrets, or recurring cost.
+
+## Prerequisites
+
+Install the same external tools CI uses before running the full local gates:
+
+- Terraform CLI 1.15.1
+- TFLint 0.62.0
+- terraform-docs 0.23.0
+- OPA 1.10.0
+- shellcheck
+- bats
+
+## Quickstart
+
+```sh
+make help
+make setup
+python tools/verify.py ci
+python tools/verify.py integration
+```
+
+`python tools/verify.py ci` runs formatting, init, validate, TFLint, tests, OPA checks, and terraform-docs drift checks. `python tools/verify.py integration` builds an ephemeral workspace under `.tmp/ci/integration/` from `terraform/`, copies the single-environment example, and runs the Terraform-facing gates against that assembled module.
 
 ## What this is, and what it isn't
 
@@ -34,7 +56,7 @@ This framework follows the "packer-aligned" style established in [`nwarila-platf
 | Pattern | Where to look |
 | --- | --- |
 | Required + optional scalar variables with `optional(<type>, <default>)` | [`variables.tf`](terraform/variables.tf) inside `all_environments` |
-| Custom validation rules (`condition`/`error_message`) | [`variables.tf`](terraform/variables.tf), 4 validations on `all_environments` |
+| Custom validation rules (`condition`/`error_message`) | [`variables.tf`](terraform/variables.tf), validations on `all_environments` |
 | Sensitive variables with operational-context descriptions | `variable "secret_seed"` in [`variables.tf`](terraform/variables.tf) |
 | List-of-objects mega-variable with nested optionals | `manifests`, `lifecycle_hooks` in [`variables.tf`](terraform/variables.tf) |
 | Single-optional sub-object (becomes splat-on-optional dynamic block in main.tf) | `rotation`, `certificate`, `pet` in [`variables.tf`](terraform/variables.tf) |
@@ -49,22 +71,6 @@ This framework follows the "packer-aligned" style established in [`nwarila-platf
 | Aggregate roll-up outputs | `framework_summary` in [`outputs.tf`](terraform/outputs.tf) |
 | `terraform test` with real `apply` + output assertions | [`tests/synthetic_environments.tftest.hcl`](terraform/tests/synthetic_environments.tftest.hcl) |
 | Validation-rejection tests using `expect_failures` | same file, runs 5+ |
-
-## Quickstart
-
-```sh
-# Repo-local quality gate.
-python tools/verify.py ci
-
-# Exercise the quickstart input in an ephemeral workspace.
-python tools/verify.py integration
-```
-
-`python tools/verify.py ci` runs Terraform formatting, init, validate, TFLint, tests, source-aware OPA checks, plan-aware OPA checks, and terraform-docs drift checks. It does not read a local `terraform/terraform.tfvars`; its Terraform coverage comes from the committed tests under [`terraform/tests/`](terraform/tests/) plus the multi-environment plan fixture in [`examples/multi-environment/terraform.tfvars.example`](examples/multi-environment/terraform.tfvars.example).
-
-`python tools/verify.py integration` builds an ephemeral workspace under `.tmp/ci/integration/` from `terraform/`, copies [`examples/single-environment/terraform.tfvars.example`](examples/single-environment/terraform.tfvars.example) into that workspace, and runs the Terraform-facing gates against the assembled module. `python tools/verify.py verify` runs both layers.
-
-State produced by `terraform test` lives inside the test sandbox and is torn down on completion.
 
 ## New Framework Checklist
 

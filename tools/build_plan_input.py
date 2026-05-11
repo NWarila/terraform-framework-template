@@ -34,9 +34,11 @@ def include_resource(change: dict[str, Any]) -> bool:
     return actions not in (["delete"], ["no-op"])
 
 
-def normalize_resource(change: dict[str, Any]) -> dict[str, Any]:
+def normalize_resource(
+    change: dict[str, Any], config_resources: dict[str, dict[str, Any]]
+) -> dict[str, Any]:
     change_detail = change.get("change", {})
-    config = CONFIG_RESOURCES.get(change["address"], {})
+    config = config_resources.get(change["address"], {})
     return {
         "address": change["address"],
         "mode": change["mode"],
@@ -44,6 +46,7 @@ def normalize_resource(change: dict[str, Any]) -> dict[str, Any]:
         "name": change["name"],
         "actions": change_detail.get("actions", []),
         "lifecycle": config.get("lifecycle", {}),
+        "references": expression_references(config),
         "values": planned_values(change_detail),
     }
 
@@ -68,19 +71,29 @@ def collect_config_resources(module: dict[str, Any] | None) -> dict[str, dict[st
     return resources
 
 
-CONFIG_RESOURCES: dict[str, dict[str, Any]] = {}
+def expression_references(config: dict[str, Any]) -> dict[str, list[str]]:
+    references: dict[str, list[str]] = {}
+    expressions = config.get("expressions", {})
+    if not isinstance(expressions, dict):
+        return references
+    for name, expression in expressions.items():
+        if not isinstance(name, str) or not isinstance(expression, dict):
+            continue
+        refs = expression.get("references", [])
+        if isinstance(refs, list):
+            references[name] = [ref for ref in refs if isinstance(ref, str)]
+    return references
 
 
 def build_input(plan: dict[str, Any]) -> dict[str, Any]:
-    global CONFIG_RESOURCES
-    CONFIG_RESOURCES = collect_config_resources(
+    config_resources = collect_config_resources(
         plan.get("configuration", {}).get("root_module")
     )
     return {
         "format_version": plan.get("format_version"),
         "terraform_version": plan.get("terraform_version"),
         "resources": [
-            normalize_resource(change)
+            normalize_resource(change, config_resources)
             for change in plan.get("resource_changes", [])
             if include_resource(change)
         ],

@@ -7,7 +7,7 @@
 - A complete synthetic Terraform module under [`terraform/`](../../terraform/) that demonstrates framework structure without external services.
 - The framework deploy reusable, [`reusable-terraform-deploy.yaml`](../../.github/workflows/reusable-terraform-deploy.yaml), which runner repos call for plan/apply.
 - Universal reusable workflows for CodeQL, Scorecard, IaC security, release-please, release evidence, and trusted-bot auto-merge.
-- A template-tier `baseline-manifest.json` for derivative frameworks that should mirror the stable scaffold byte-for-byte: shared config, reusable quality workflows, policy/tooling, and layout sentinels.
+- A template-tier `baseline-manifest.json` for derivative frameworks that separates byte-identical scaffold from starter files derivatives rewrite.
 - Framework-template ADRs under [`docs/decision-records/template/`](../decision-records/template/) that explain the shared framework decisions derivative frameworks inherit.
 - The normalized Terraform CI harness under [`tools/ci/`](../../tools/ci/).
 

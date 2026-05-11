@@ -5,11 +5,16 @@ can stay easy to use without losing the deeper platform controls.
 
 ## Required Shared Baseline
 
-Derivative frameworks should mirror the files listed in
-[`baseline-manifest.json`](../../baseline-manifest.json). That set is the stable
-scaffold: repository hygiene, docs layout checks, drift manifest validation,
-security callers, OPA policy, reusable deploy validation, and the Python
-verification entrypoint.
+Derivative frameworks should mirror the files listed under
+`byte_identical` in [`baseline-manifest.json`](../../baseline-manifest.json).
+That set is the stable scaffold: repository hygiene, docs layout checks, drift
+manifest validation, security callers, reusable deploy validation, universal
+OPA policy, and the Python verification entrypoint.
+
+The `scaffold_starter` category documents starter files that are useful when a
+new derivative is born but should be rewritten for its real providers. Drift
+gate validates those entries as part of the manifest contract, but it does not
+byte-compare them in consumers.
 
 ## Framework-Owned Layer
 
@@ -30,5 +35,6 @@ releases. Drop it when the repo is only a private implementation detail.
 1. Rewrite `README.md` for the real framework.
 2. Replace the synthetic Terraform under `terraform/`.
 3. Update examples and generated Terraform docs.
-4. Decide whether to keep the optional release layer.
-5. Run `python tools/verify.py verify`.
+4. Rewrite any `scaffold_starter` policy for the real provider surface.
+5. Decide whether to keep the optional release layer.
+6. Run `python tools/verify.py verify`.
