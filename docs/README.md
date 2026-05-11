@@ -1,6 +1,6 @@
 # Documentation
 
-Documentation for this template follows the Diataxis framework.
+Documentation for this template follows the [Diátaxis framework](https://diataxis.fr/).
 
 | Quadrant | Path | Purpose |
 | --- | --- | --- |
