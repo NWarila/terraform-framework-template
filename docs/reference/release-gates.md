@@ -7,7 +7,6 @@ PRs to `main` on this template must pass:
 - `yamllint` (workflow YAML)
 - `ruff` (Python tools)
 - `markdownlint` (docs)
-- `zizmor` (workflow security)
 - `org-baseline / verify` (drift-gate against `nwarila-platform/.github` at pinned source-ref)
 - `Trivy (filesystem & secrets)`, `Gitleaks (secret scan)`, `zizmor (Actions security)` (security)
 - `CodeQL` (`security.yaml`)

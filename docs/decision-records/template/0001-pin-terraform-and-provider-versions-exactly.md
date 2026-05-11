@@ -3,11 +3,11 @@
 | Field          | Value                                   |
 | -------------- | --------------------------------------- |
 | Status         | Accepted                                |
-| Date           | 2026-05-11                              |
+| Date           | 2026-05-06                              |
 | Authors        | Nick Warila (@NWarila)                  |
 | Decision-maker | Nick Warila (sole portfolio maintainer) |
-| Consulted      | None.                                   |
-| Informed       | None.                                   |
+| Consulted      | Terraform runner pinning ADR and provider lock policy. |
+| Informed       | Derivative frameworks via baseline manifest. |
 | Reversibility  | Medium                                  |
 | Review-by      | N/A (Accepted)                          |
 
@@ -122,7 +122,9 @@ None (current).
 
 ## Implementing PRs
 
-Pending.
+- [`87323cd`](https://github.com/NWarila/terraform-framework-template/commit/87323cdbe7a9ae73508d9d00e9fe061f3a4d2474) introduced the exact-pinned synthetic framework baseline.
+- [`a0641e2`](https://github.com/NWarila/terraform-framework-template/commit/a0641e28ccf9cae1c0a465040ff264b90c834458) updated provider pins to the published versions used by the first release.
+- [#1](https://github.com/NWarila/terraform-framework-template/issues/1) / [`8f03db7`](https://github.com/NWarila/terraform-framework-template/commit/8f03db70875352c1d676f1618aef833d6974538f) added the drift-gated quality surface that keeps the pinning policy inherited by derivatives.
 
 ## Related ADRs
 
@@ -130,6 +132,4 @@ Pending.
 
 ## Compliance Notes
 
-- NIST SP 800-53 Rev. 5 CM-2: exact Terraform and provider versions are part of the framework baseline configuration.
-- NIST SP 800-53 Rev. 5 SI-7: exact pins reduce unintended toolchain drift between reviewed source and deployed behavior.
-- NIST SP 800-218 SSDF PS.2: reviewable dependency bumps support repeatable release-integrity verification.
+None.

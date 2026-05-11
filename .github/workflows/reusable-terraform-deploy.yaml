@@ -74,7 +74,7 @@ on:
         default: "1.15.1"
       apply:
         description: |
-          When true, run `terraform apply -auto-approve` after the
+          When true, apply the saved Terraform plan after the
           plan. Default false — most callers gate apply to specific
           branches/events. Caller is responsible for ensuring inputs
           are safe to apply (the framework runs in the caller's CI
@@ -201,7 +201,7 @@ jobs:
 
       - name: Upload plan artifact
         if: always()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: tfplan-${{ github.run_id }}-${{ github.run_attempt }}
           path: framework/terraform/tfplan
@@ -211,7 +211,7 @@ jobs:
       - name: terraform apply
         if: ${{ inputs.apply && steps.plan.outputs.plan_status == 'has-changes' }}
         working-directory: framework/terraform
-        run: terraform apply -input=false -auto-approve tfplan
+        run: terraform apply -input=false tfplan
 
       - name: Upload state artifact (do-nothing framework only)
         # The do-nothing framework uses the local backend, so state
@@ -219,7 +219,7 @@ jobs:
         # derivative frameworks override the backend and never produce
         # a local state file — this step would be a no-op for them.
         if: ${{ inputs.apply && always() }}
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: tfstate-${{ github.run_id }}-${{ github.run_attempt }}
           path: framework/terraform/terraform.tfstate

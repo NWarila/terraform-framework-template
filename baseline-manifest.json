@@ -1,209 +1,204 @@
 {
-  "version": "1",
-  "files": [
-    {
-      "source": ".editorconfig",
-      "target": ".editorconfig"
-    },
-    {
-      "source": ".gitattributes",
-      "target": ".gitattributes"
-    },
-    {
-      "source": ".gitignore",
-      "target": ".gitignore"
-    },
-    {
-      "source": ".markdownlint-cli2.jsonc",
-      "target": ".markdownlint-cli2.jsonc"
-    },
-    {
-      "source": ".pre-commit-config.yaml",
-      "target": ".pre-commit-config.yaml"
-    },
-    {
-      "source": ".terraform-docs.yml",
-      "target": ".terraform-docs.yml"
-    },
-    {
-      "source": ".tflint.hcl",
-      "target": ".tflint.hcl"
-    },
-    {
-      "source": "LICENSE",
-      "target": "LICENSE"
-    },
-    {
-      "source": "Makefile",
-      "target": "Makefile"
-    },
-    {
-      "source": "baseline-manifest.json",
-      "target": "baseline-manifest.json"
-    },
-    {
-      "source": ".github/CODEOWNERS",
-      "target": ".github/CODEOWNERS"
-    },
-    {
-      "source": ".github/PULL_REQUEST_TEMPLATE.md",
-      "target": ".github/PULL_REQUEST_TEMPLATE.md"
-    },
-    {
-      "source": ".github/renovate.json5",
-      "target": ".github/renovate.json5"
-    },
-    {
-      "source": ".github/workflows/reusable-codeql.yaml",
-      "target": ".github/workflows/reusable-codeql.yaml"
-    },
-    {
-      "source": ".github/workflows/reusable-iac-security.yaml",
-      "target": ".github/workflows/reusable-iac-security.yaml"
-    },
-    {
-      "source": ".github/workflows/reusable-scorecard.yaml",
-      "target": ".github/workflows/reusable-scorecard.yaml"
-    },
-    {
-      "source": ".github/workflows/security.yaml",
-      "target": ".github/workflows/security.yaml"
-    },
-    {
-      "source": "docs/tutorials/.gitkeep",
-      "target": "docs/tutorials/.gitkeep"
-    },
-    {
-      "source": "docs/how-to/.gitkeep",
-      "target": "docs/how-to/.gitkeep"
-    },
-    {
-      "source": "docs/reference/.gitkeep",
-      "target": "docs/reference/.gitkeep"
-    },
-    {
-      "source": "docs/reference/mirroring.md",
-      "target": "docs/reference/mirroring.md"
-    },
-    {
-      "source": "docs/explanation/.gitkeep",
-      "target": "docs/explanation/.gitkeep"
-    },
-    {
-      "source": "docs/decision-records/template/.gitkeep",
-      "target": "docs/decision-records/template/.gitkeep"
-    },
-    {
-      "source": "docs/decision-records/template/README.md",
-      "target": "docs/decision-records/template/README.md"
-    },
-    {
-      "source": "docs/decision-records/template/0001-pin-terraform-and-provider-versions-exactly.md",
-      "target": "docs/decision-records/template/0001-pin-terraform-and-provider-versions-exactly.md"
-    },
-    {
-      "source": "docs/decision-records/template/0002-keep-reference-framework-credential-free.md",
-      "target": "docs/decision-records/template/0002-keep-reference-framework-credential-free.md"
-    },
-    {
-      "source": "docs/decision-records/template/0003-separate-framework-code-from-runner-inventory.md",
-      "target": "docs/decision-records/template/0003-separate-framework-code-from-runner-inventory.md"
-    },
-    {
-      "source": "docs/decision-records/template/0004-isolate-pull-request-target-triggers.md",
-      "target": "docs/decision-records/template/0004-isolate-pull-request-target-triggers.md"
-    },
-    {
-      "source": "docs/decision-records/repo/.gitkeep",
-      "target": "docs/decision-records/repo/.gitkeep"
-    },
-    {
-      "source": "tools/build_opa_input.py",
-      "target": "tools/build_opa_input.py"
-    },
-    {
-      "source": "tools/build_plan_input.py",
-      "target": "tools/build_plan_input.py"
-    },
-    {
-      "source": "tools/check_baseline_manifest.py",
-      "target": "tools/check_baseline_manifest.py"
-    },
-    {
-      "source": "tools/check_docs_layout.py",
-      "target": "tools/check_docs_layout.py"
-    },
-    {
-      "source": "tools/verify.py",
-      "target": "tools/verify.py"
-    },
-    {
-      "source": "tools/ci/config.toml",
-      "target": "tools/ci/config.toml"
-    },
-    {
-      "source": "tools/ci/apply_overlay.sh",
-      "target": "tools/ci/apply_overlay.sh"
-    },
-    {
-      "source": "tools/ci/check_workflow_run_inputs.py",
-      "target": "tools/ci/check_workflow_run_inputs.py"
-    },
-    {
-      "source": "tools/ci/detect_release_evidence_type.sh",
-      "target": "tools/ci/detect_release_evidence_type.sh"
-    },
-    {
-      "source": "tools/ci/run_integration.py",
-      "target": "tools/ci/run_integration.py"
-    },
-    {
-      "source": "tools/ci/terraform_tfvars_args.sh",
-      "target": "tools/ci/terraform_tfvars_args.sh"
-    },
-    {
-      "source": "tools/ci/validate_framework_ref.sh",
-      "target": "tools/ci/validate_framework_ref.sh"
-    },
-    {
-      "source": "tests/ci/apply_overlay.bats",
-      "target": "tests/ci/apply_overlay.bats"
-    },
-    {
-      "source": "tests/ci/check_workflow_run_inputs.bats",
-      "target": "tests/ci/check_workflow_run_inputs.bats"
-    },
-    {
-      "source": "tests/ci/detect_release_evidence_type.bats",
-      "target": "tests/ci/detect_release_evidence_type.bats"
-    },
-    {
-      "source": "tests/ci/terraform_tfvars_args.bats",
-      "target": "tests/ci/terraform_tfvars_args.bats"
-    },
-    {
-      "source": "tests/ci/validate_framework_ref.bats",
-      "target": "tests/ci/validate_framework_ref.bats"
-    },
-    {
-      "source": "policies/opa/framework_plan.rego",
-      "target": "policies/opa/framework_plan.rego"
-    },
-    {
-      "source": "policies/opa/framework_plan_test.rego",
-      "target": "policies/opa/framework_plan_test.rego"
-    },
-    {
-      "source": "policies/opa/repo_hygiene.rego",
-      "target": "policies/opa/repo_hygiene.rego"
-    },
-    {
-      "source": "policies/opa/repo_hygiene_test.rego",
-      "target": "policies/opa/repo_hygiene_test.rego"
-    },
-    {
-      "source": "fixtures/integration/basic/README.md",
-      "target": "fixtures/integration/basic/README.md"
-    }
-  ]
+    "version":  "2",
+    "byte_identical":  [
+                           {
+                               "source":  ".editorconfig",
+                               "target":  ".editorconfig"
+                           },
+                           {
+                               "source":  ".gitattributes",
+                               "target":  ".gitattributes"
+                           },
+                           {
+                               "source":  ".gitignore",
+                               "target":  ".gitignore"
+                           },
+                           {
+                               "source":  ".markdownlint-cli2.jsonc",
+                               "target":  ".markdownlint-cli2.jsonc"
+                           },
+                           {
+                               "source":  ".pre-commit-config.yaml",
+                               "target":  ".pre-commit-config.yaml"
+                           },
+                           {
+                               "source":  ".terraform-docs.yml",
+                               "target":  ".terraform-docs.yml"
+                           },
+                           {
+                               "source":  ".tflint.hcl",
+                               "target":  ".tflint.hcl"
+                           },
+                           {
+                               "source":  "LICENSE",
+                               "target":  "LICENSE"
+                           },
+                           {
+                               "source":  "Makefile",
+                               "target":  "Makefile"
+                           },
+                           {
+                               "source":  "baseline-manifest.json",
+                               "target":  "baseline-manifest.json"
+                           },
+                           {
+                               "source":  ".github/CODEOWNERS",
+                               "target":  ".github/CODEOWNERS"
+                           },
+                           {
+                               "source":  ".github/PULL_REQUEST_TEMPLATE.md",
+                               "target":  ".github/PULL_REQUEST_TEMPLATE.md"
+                           },
+                           {
+                               "source":  ".github/renovate.json5",
+                               "target":  ".github/renovate.json5"
+                           },
+                           {
+                               "source":  ".github/workflows/reusable-codeql.yaml",
+                               "target":  ".github/workflows/reusable-codeql.yaml"
+                           },
+                           {
+                               "source":  ".github/workflows/reusable-iac-security.yaml",
+                               "target":  ".github/workflows/reusable-iac-security.yaml"
+                           },
+                           {
+                               "source":  ".github/workflows/reusable-scorecard.yaml",
+                               "target":  ".github/workflows/reusable-scorecard.yaml"
+                           },
+                           {
+                               "source":  ".github/workflows/security.yaml",
+                               "target":  ".github/workflows/security.yaml"
+                           },
+                           {
+                               "source":  "docs/tutorials/.gitkeep",
+                               "target":  "docs/tutorials/.gitkeep"
+                           },
+                           {
+                               "source":  "docs/how-to/.gitkeep",
+                               "target":  "docs/how-to/.gitkeep"
+                           },
+                           {
+                               "source":  "docs/reference/.gitkeep",
+                               "target":  "docs/reference/.gitkeep"
+                           },
+                           {
+                               "source":  "docs/reference/mirroring.md",
+                               "target":  "docs/reference/mirroring.md"
+                           },
+                           {
+                               "source":  "docs/explanation/.gitkeep",
+                               "target":  "docs/explanation/.gitkeep"
+                           },
+                           {
+                               "source":  "docs/decision-records/template/.gitkeep",
+                               "target":  "docs/decision-records/template/.gitkeep"
+                           },
+                           {
+                               "source":  "docs/decision-records/template/README.md",
+                               "target":  "docs/decision-records/template/README.md"
+                           },
+                           {
+                               "source":  "docs/decision-records/template/0001-pin-terraform-and-provider-versions-exactly.md",
+                               "target":  "docs/decision-records/template/0001-pin-terraform-and-provider-versions-exactly.md"
+                           },
+                           {
+                               "source":  "docs/decision-records/template/0002-keep-reference-framework-credential-free.md",
+                               "target":  "docs/decision-records/template/0002-keep-reference-framework-credential-free.md"
+                           },
+                           {
+                               "source":  "docs/decision-records/template/0004-isolate-pull-request-target-triggers.md",
+                               "target":  "docs/decision-records/template/0004-isolate-pull-request-target-triggers.md"
+                           },
+                           {
+                               "source":  "docs/decision-records/repo/.gitkeep",
+                               "target":  "docs/decision-records/repo/.gitkeep"
+                           },
+                           {
+                               "source":  "tools/build_opa_input.py",
+                               "target":  "tools/build_opa_input.py"
+                           },
+                           {
+                               "source":  "tools/build_plan_input.py",
+                               "target":  "tools/build_plan_input.py"
+                           },
+                           {
+                               "source":  "tools/check_baseline_manifest.py",
+                               "target":  "tools/check_baseline_manifest.py"
+                           },
+                           {
+                               "source":  "tools/check_adr_schema.py",
+                               "target":  "tools/check_adr_schema.py"
+                           },
+                           {
+                               "source":  "tools/check_docs_layout.py",
+                               "target":  "tools/check_docs_layout.py"
+                           },
+                           {
+                               "source":  "tools/verify.py",
+                               "target":  "tools/verify.py"
+                           },
+                           {
+                               "source":  "tools/ci/config.toml",
+                               "target":  "tools/ci/config.toml"
+                           },
+                           {
+                               "source":  "tools/ci/apply_overlay.sh",
+                               "target":  "tools/ci/apply_overlay.sh"
+                           },
+                           {
+                               "source":  "tools/ci/check_workflow_run_inputs.py",
+                               "target":  "tools/ci/check_workflow_run_inputs.py"
+                           },
+                           {
+                               "source":  "tools/ci/run_integration.py",
+                               "target":  "tools/ci/run_integration.py"
+                           },
+                           {
+                               "source":  "tools/ci/terraform_tfvars_args.sh",
+                               "target":  "tools/ci/terraform_tfvars_args.sh"
+                           },
+                           {
+                               "source":  "tools/ci/validate_framework_ref.sh",
+                               "target":  "tools/ci/validate_framework_ref.sh"
+                           },
+                           {
+                               "source":  "tests/ci/apply_overlay.bats",
+                               "target":  "tests/ci/apply_overlay.bats"
+                           },
+                           {
+                               "source":  "tests/ci/check_workflow_run_inputs.bats",
+                               "target":  "tests/ci/check_workflow_run_inputs.bats"
+                           },
+                           {
+                               "source":  "tests/ci/terraform_tfvars_args.bats",
+                               "target":  "tests/ci/terraform_tfvars_args.bats"
+                           },
+                           {
+                               "source":  "tests/ci/validate_framework_ref.bats",
+                               "target":  "tests/ci/validate_framework_ref.bats"
+                           },
+                           {
+                               "source":  "policies/opa/repo_hygiene.rego",
+                               "target":  "policies/opa/repo_hygiene.rego"
+                           },
+                           {
+                               "source":  "policies/opa/repo_hygiene_test.rego",
+                               "target":  "policies/opa/repo_hygiene_test.rego"
+                           },
+                           {
+                               "source":  "policies/opa/terraform_plan.rego",
+                               "target":  "policies/opa/terraform_plan.rego"
+                           },
+                           {
+                               "source":  "policies/opa/terraform_plan_test.rego",
+                               "target":  "policies/opa/terraform_plan_test.rego"
+                           },
+                           {
+                               "source":  "fixtures/integration/basic/README.md",
+                               "target":  "fixtures/integration/basic/README.md"
+                           }
+                       ],
+    "scaffold_starter":  [
+
+                         ]
 }

@@ -11,7 +11,7 @@ This template repo's `ci.yaml` exercises the framework pattern and its support t
 | Workflow security | `zizmor` | Workflow code avoids known dangerous Actions patterns. |
 | YAML data | `yamllint` | Workflow YAML is valid and consistently shaped. |
 | Python tools | `ruff` | CI helper scripts lint clean. |
-| Terraform plan policy | `make opa-plan` | `framework_plan` evaluates a real multi-environment `terraform plan` produced from the example fixture. |
+| Terraform plan policy | `make opa-plan` | `terraform_plan` evaluates a real multi-environment `terraform plan` produced from the example fixture. Framework-specific resource assertions live in `terraform test`. |
 | Template manifest | `manifest-check` | The template-tier scaffold manifest loads and every source path exists. |
 | Markdown | `markdownlint` | Documentation lints clean. |
 | Documentation layout | `docs-layout` | Markdown stays inside the Diataxis and ADR directory structure. |

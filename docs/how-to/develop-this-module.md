@@ -21,6 +21,10 @@ Use `make docs` after editing Terraform inputs, outputs, or variables; `make doc
 
 ## Editing framework files
 
-Keep framework code in `terraform/`. Put reusable CI helpers under `tools/ci/`, and list files in `baseline-manifest.json` only when derivative frameworks should mirror them byte-for-byte.
+Keep framework code in `terraform/`. Put reusable CI helpers under `tools/ci/`.
+List files in `baseline-manifest.json` under `byte_identical` only when
+derivative frameworks should mirror them byte-for-byte. Use
+`scaffold_starter` for starter policy or examples derivatives are expected to
+rewrite.
 
 Runner inventory data belongs in runner repos, not in this framework template.
