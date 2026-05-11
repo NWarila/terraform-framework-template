@@ -1,6 +1,6 @@
 name: Reusable IaC Security
 
-# Universal IaC security scanning consumed by Terraform framework
+# Universal IaC security scanning consumed by Terraform template
 # repositories. Three independent jobs run in parallel:
 #
 # - Trivy:    filesystem misconfig + secret scanning, fail on HIGH/CRITICAL
@@ -12,7 +12,7 @@ name: Reusable IaC Security
 # consumer's GitHub Security tab.
 #
 # Caller pattern:
-#   uses: NWarila/terraform-framework-template/.github/workflows/reusable-iac-security.yaml@<sha>
+#   uses: <owner>/<template-repo>/.github/workflows/reusable-iac-security.yaml@<sha>
 
 on:
   workflow_call:
@@ -79,22 +79,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Generate Trivy SARIF report
+      - name: Run Trivy policy and generate SARIF
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: "fs"
           scan-ref: "."
           format: "sarif"
           output: "trivy-results.sarif"
-          severity: ${{ inputs.trivy_severity }}
-          scanners: "misconfig,secret"
-
-      - name: Enforce Trivy policy
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
-        with:
-          scan-type: "fs"
-          scan-ref: "."
-          format: "table"
           severity: ${{ inputs.trivy_severity }}
           scanners: "misconfig,secret"
           exit-code: ${{ inputs.trivy_advisory && '0' || '1' }}

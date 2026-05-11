@@ -1,16 +1,15 @@
-# golden_terraform — universal stack-agnostic Terraform-quality policy.
+# repo_hygiene - repository hygiene policy for Terraform-family repos.
 #
-# Encodes invariants that apply to every Terraform repository in the
-# portfolio regardless of stack: workflow `uses:` SHA-pinning, exact
-# `required_version` pin in versions.tf, and exact `=` operator on
-# every provider version. Rejects the pessimistic `~>` operator and
-# unbounded `>=` constraints.
+# Encodes repository-level invariants that are visible from source files:
+# workflow `uses:` SHA-pinning, privileged-trigger boundaries, exact
+# `required_version` pins in versions.tf, and exact `=` operator on provider
+# versions. Terraform plan-aware policy belongs in a separate package.
 #
 # Rules trace to:
 #   - org ADR-0003 (deny-all .gitignore) requires explicit allowlist
 #     discipline; the SHA-pin rules here ensure workflow refs share
 #     the same explicit-allowlist character.
-#   - template-tier ADR-template/0001 in NWarila/terraform-runner-template
+#   - template-tier ADR-template/0001 in the owning Terraform template
 #     ("Pin Terraform and Provider Versions Exactly") mandates the
 #     exact-pin rules below for every Terraform-runner consumer.
 #   - org ADR-0004 §"SHA-pin retention check" requires
@@ -25,10 +24,10 @@
 #         ...
 #       ]
 #     },
-#     "files": { "<path>": "<contents>" }
+#     "files": { "<path>": "<contents>" }  # includes workflow files
 #   }
 
-package golden_terraform
+package repo_hygiene
 
 import rego.v1
 
@@ -47,6 +46,29 @@ provider_version_line_re := `^\s*version\s*=\s*"[^"]+"\s*$`
 
 # Exact pin shape for a provider version line.
 exact_provider_version_line_re := `^\s*version\s*=\s*"=\s*[0-9]+\.[0-9]+\.[0-9]+"\s*$`
+
+# PR-controlled content markers that must not appear in workflows running in
+# pull_request_target context or in reusables intentionally called by them.
+unsafe_pr_target_ref_fragments := {
+	"uses: actions/checkout@",
+	"github.event.pull_request.head",
+	"github.event.pull_request.title",
+	"github.event.pull_request.body",
+	"github.event.pull_request.commits_url",
+	"github.event.pull_request.diff_url",
+	"github.event.pull_request.patch_url",
+	"github.head_ref",
+	"gh pr checkout",
+	"gh pr diff",
+	"gh pr view",
+	"git checkout",
+	"git fetch",
+	"git switch",
+}
+
+pull_request_target_allowed_workflows := {
+	".github/workflows/auto-merge.yaml",
+}
 
 # endregion --- [ Regex constants ] -------------------------------------------------------- #
 
@@ -89,8 +111,41 @@ uncommented_lines(path) := lines if {
 	]
 }
 
+uncommented_line_records(path) := records if {
+	content := input.files[path]
+	raw_lines := split(content, "\n")
+	records := [{"line": idx + 1, "text": text} |
+		some idx
+		raw := raw_lines[idx]
+		text := trim_space(raw)
+		text != ""
+		not startswith(text, "#")
+		not startswith(text, "//")
+	]
+}
+
 has_versions_tf if {
 	_ := input.files["terraform/versions.tf"]
+}
+
+workflow_file(path) if {
+	startswith(path, ".github/workflows/")
+}
+
+has_pull_request_target_trigger(path) if {
+	workflow_file(path)
+	record := uncommented_line_records(path)[_]
+	text := record.text
+	regex.match(`^pull_request_target\s*:`, text)
+}
+
+protected_pull_request_target_workflow(path) if {
+	has_pull_request_target_trigger(path)
+}
+
+protected_pull_request_target_workflow(path) if {
+	path == ".github/workflows/reusable-auto-merge.yaml"
+	_ := input.files[path]
 }
 
 # endregion --- [ Helpers ] ---------------------------------------------------------------- #
@@ -108,6 +163,50 @@ deny contains msg if {
 }
 
 # endregion --- [ Deny rules: workflow uses: pinning ] ------------------------------------- #
+
+# region ------ [ Deny rules: pull_request_target guard ] ---------------------------------- #
+
+deny contains msg if {
+	has_pull_request_target_trigger(path)
+	not pull_request_target_allowed_workflows[path]
+	msg := sprintf("%s must not use pull_request_target; only auto-merge.yaml is allowed to run in that context", [path])
+}
+
+deny contains msg if {
+	some path
+	_ := input.files[path]
+	protected_pull_request_target_workflow(path)
+	record := uncommented_line_records(path)[_]
+	line_no := record.line
+	text := record.text
+	line := lower(text)
+	fragment := unsafe_pr_target_ref_fragments[_]
+	contains(line, fragment)
+	msg := sprintf(
+		"%s:%d - pull_request_target auto-merge guard forbids PR-controlled content reads: %s",
+		[path, line_no, fragment],
+	)
+}
+
+deny contains msg if {
+	content := input.files[".github/workflows/reusable-auto-merge.yaml"]
+	contains(lower(content), "extra_authors")
+	msg := ".github/workflows/reusable-auto-merge.yaml must not expose extra_authors; auto-merge principals are a closed trust list"
+}
+
+deny contains msg if {
+	content := input.files[".github/workflows/reusable-auto-merge.yaml"]
+	contains(lower(content), "github-actions[bot]")
+	msg := ".github/workflows/reusable-auto-merge.yaml must not trust github-actions[bot]; release PRs require human review"
+}
+
+deny contains msg if {
+	content := input.files[".github/workflows/reusable-auto-merge.yaml"]
+	not contains(content, "declare -a trusted_authors=(")
+	msg := ".github/workflows/reusable-auto-merge.yaml must declare trusted authors as a bash array"
+}
+
+# endregion --- [ Deny rules: pull_request_target guard ] ---------------------------------- #
 
 # region ------ [ Deny rules: terraform/versions.tf content ] ------------------------------ #
 
