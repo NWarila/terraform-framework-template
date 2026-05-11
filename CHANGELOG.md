@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0](https://github.com/NWarila/terraform-framework-template/compare/v0.1.0...v1.0.0) (2026-05-11)
+
+
+### BREAKING CHANGES
+
+* establish the v1.0.0 framework-template contract, ADR tiers, validation surface, and release evidence semantics for derivative frameworks.
+
+### Features
+
+* prepare framework template v1.0.0 ([f397022](https://github.com/NWarila/terraform-framework-template/commit/f39702285998e576483b90132bc283d075614913))
+* support s3 backend deploys ([24deab9](https://github.com/NWarila/terraform-framework-template/commit/24deab9db40fbf22a8e7a0c61d7110098c0a1397))
+
 ## 0.1.0 (2026-05-11)
 
 
