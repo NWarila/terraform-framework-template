@@ -129,5 +129,4 @@ None (current).
 
 ## Compliance Notes
 
-- NIST SP 800-53 Rev. 5 SA-11: a credential-free reference makes the template validation path repeatable in untrusted forks.
-- NIST SP 800-218 SSDF PO.5: avoiding secrets in template CI reduces development-environment exposure.
+None.

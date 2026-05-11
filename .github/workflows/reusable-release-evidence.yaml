@@ -37,6 +37,7 @@ name: Reusable Release Evidence
 #       uses: NWarila/terraform-framework-template/.github/workflows/reusable-release-evidence.yaml@<sha>
 #       with:
 #         terraform_version: "1.15.1"
+#         repo_type: framework
 
 on:
   workflow_call:
@@ -45,6 +46,11 @@ on:
         description: |
           Exact Terraform version (used for framework-shape repos to run
           terraform fmt/init/validate/test). Runner repos ignore this input.
+        required: true
+        type: string
+      repo_type:
+        description: |
+          Explicit repo type for release evidence: framework, runner, or template.
         required: true
         type: string
 
@@ -70,15 +76,13 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Detect repo type
+      - name: Validate repo type
         id: type
+        env:
+          REPO_TYPE: ${{ inputs.repo_type }}
         run: |
           set -euo pipefail
-          if [ ! -f tools/ci/detect_release_evidence_type.sh ]; then
-            echo "::error::tools/ci/detect_release_evidence_type.sh is required for release evidence"
-            exit 1
-          fi
-          t="$(bash tools/ci/detect_release_evidence_type.sh .)"
+          t="${REPO_TYPE}"
           case "$t" in
             framework|runner|template) ;;
             *)

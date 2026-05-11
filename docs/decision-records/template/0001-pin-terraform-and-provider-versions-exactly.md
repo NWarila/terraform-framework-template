@@ -132,6 +132,4 @@ None (current).
 
 ## Compliance Notes
 
-- NIST SP 800-53 Rev. 5 CM-2: exact Terraform and provider versions are part of the framework baseline configuration.
-- NIST SP 800-53 Rev. 5 SI-7: exact pins reduce unintended toolchain drift between reviewed source and deployed behavior.
-- NIST SP 800-218 SSDF PS.2: reviewable dependency bumps support repeatable release-integrity verification.
+None.

@@ -48,13 +48,6 @@ repos:
         pass_filenames: false
         files: ^terraform/.*\.tf$
 
-      - id: terraform-validate
-        name: terraform validate
-        entry: bash -c 'terraform -chdir=terraform init -backend=false -input=false >/dev/null && terraform -chdir=terraform validate'
-        language: system
-        pass_filenames: false
-        files: ^terraform/.*\.(tf|tftest\.hcl)$
-
       - id: terraform-docs
         name: terraform-docs
         entry: terraform-docs --config .terraform-docs.yml terraform

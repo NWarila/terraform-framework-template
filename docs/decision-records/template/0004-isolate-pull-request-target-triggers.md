@@ -68,9 +68,8 @@ forbid it from release.**
 
 Framework templates keep trusted-bot auto-merge in `auto-merge.yaml`, which is a
 small caller of `reusable-auto-merge.yaml`. The reusable auto-merge workflow is
-the single implementation of the trusted-author gate and continues to reject
-checkout, PR-head references, `github-actions[bot]`, and caller-supplied trust
-lists.
+the single implementation of the trusted-author convention; OPA enforces that
+the privileged path does not read PR-controlled content or check out PR code.
 
 Release publication and release evidence stay in `release.yaml`. That workflow
 may be triggered by `push`, `release`, and `workflow_dispatch`. It must not use
@@ -128,9 +127,10 @@ Adherence to this ADR is confirmed by the following mechanisms. The wording
    policy enforces this against the repository's real workflow files.
 2. **Release trigger policy.** `.github/workflows/release.yaml` MUST NOT contain
    a `pull_request_target` trigger.
-3. **Auto-merge reusable guard.** `reusable-auto-merge.yaml` MUST keep the
-   trusted-author list closed, MUST NOT trust `github-actions[bot]`, and MUST
-   NOT read PR-controlled content or check out PR code.
+3. **Auto-merge reusable guard.** `reusable-auto-merge.yaml` MUST NOT read
+   PR-controlled content or check out PR code. The OPA `repo_hygiene` policy
+   enforces those content boundaries; the trusted-author list is maintained by
+   convention and branch protection.
 4. **Release evidence path.** `release.yaml` invokes release evidence only from
    `release` or explicit `workflow_dispatch` events; release-please dispatches
    the evidence task after publishing a release with `GITHUB_TOKEN`.
@@ -187,17 +187,11 @@ None (current).
 
 - [ADR-template/0001](0001-pin-terraform-and-provider-versions-exactly.md)
   establishes exact toolchain pinning, which release evidence records.
-- [ADR-template/0003](0003-separate-framework-code-from-runner-inventory.md)
-  keeps framework and runner ownership boundaries separate from release and
-  auto-merge concerns.
+- `tools/ci/apply_overlay.sh` and its Bats tests keep framework and runner
+  ownership boundaries separate from release and auto-merge concerns.
 - [Org ADR-0004](../org/0004-use-renovate-for-dependency-updates.md)
   establishes the dependency-update mechanism that produces trusted-bot PRs.
 
 ## Compliance Notes
 
-- NIST SP 800-53 Rev. 5 AC-6: limiting `pull_request_target` to a narrow
-  workflow supports least-privilege execution.
-- NIST SP 800-53 Rev. 5 CM-5: separating release changes from privileged PR
-  triggers reduces the chance of unauthorized change paths.
-- NIST SP 800-218 SSDF PO.5: workflow trust boundaries are part of maintaining
-  a secure development environment.
+None.

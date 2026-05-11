@@ -1,7 +1,6 @@
 # Documentation
 
-Documentation for this template follows the Diataxis framework per
-[org ADR-0002](decision-records/org/0002-adopt-diataxis-documentation-framework.md).
+Documentation for this template follows the Diataxis framework.
 
 | Quadrant | Path | Purpose |
 | --- | --- | --- |

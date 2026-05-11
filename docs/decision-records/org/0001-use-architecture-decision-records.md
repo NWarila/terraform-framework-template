@@ -263,14 +263,4 @@ None at this time. Subsequent ADRs that depend on this one, refine this format, 
 
 ## Compliance Notes
 
-This ADR establishes a documentation mechanism, not a deployed security control. Its value is evidentiary: later ADRs can capture rationale, alternatives, and security trade-offs in a form that is reusable during reviews. The table below indicates where such evidence may help; it is illustrative rather than exhaustive, and it is not a claim that a repository is compliant merely because ADRs exist.
-
-| Framework              | Control / Practice ID                                    | Potential Evidence Contribution                                                                 |
-| ---------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| NIST SP 800-53 Rev. 5  | SA-17 (Developer Security and Privacy Architecture and Design) | ADRs can document the architecture and design rationale considered during development.     |
-| NIST SP 800-53 Rev. 5  | PL-8 (Security and Privacy Architectures)                | ADRs can support architecture narratives and link design choices to source-controlled artifacts. |
-| NIST SP 800-53 Rev. 5  | SA-8 (Security and Privacy Engineering Principles)       | Security-relevant ADRs can record how engineering principles shaped specific choices.          |
-| NIST SP 800-218 (SSDF) | PW.1 (Design Software to Meet Security Requirements and Mitigate Security Risks) | Security-focused ADRs can record identified risks, planned mitigations, and why a requirement was accepted, relaxed, or judged out of scope. |
-| FedRAMP SSP artifacts  | System-description and architecture narratives           | ADRs can provide reusable source material and traceability for SSP drafting, but they do not replace the SSP or the assessment evidence set. |
-
-Subsequent ADRs should keep only the rows that genuinely apply to the decision at hand and should describe the relationship conservatively.
+None.

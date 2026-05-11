@@ -71,6 +71,16 @@ run "single_environment_minimum" {
   }
 
   assert {
+    condition     = random_string.environment_secret["demo-minimal"].length >= 16
+    error_message = "Expected generated random strings to be at least 16 characters."
+  }
+
+  assert {
+    condition     = time_static.environment_created["demo-minimal"].triggers["framework_source"] == "NWarila/terraform-framework-template"
+    error_message = "Expected time_static metadata to carry framework_source."
+  }
+
+  assert {
     condition     = output.environments["demo-minimal"].retention_days == 7
     error_message = "Expected retention_days=7 (dev tier default from data fixture); got ${output.environments["demo-minimal"].retention_days}."
   }
@@ -183,6 +193,16 @@ run "multi_environment_with_iterative_children" {
     condition     = output.environments["demo-beta"].retention_days == 30
     error_message = "Expected beta (staging) retention_days=30; got ${output.environments["demo-beta"].retention_days}."
   }
+
+  assert {
+    condition     = local_file.manifest["demo-alpha__alpha-manifest-1.yaml"].file_permission == "0644"
+    error_message = "Expected manifest files to use 0644 permissions by default."
+  }
+
+  assert {
+    condition     = null_resource.lifecycle_hook["demo-beta__beta-post-deploy"].triggers["framework_source"] == "NWarila/terraform-framework-template"
+    error_message = "Expected lifecycle hook metadata to carry framework_source."
+  }
 }
 
 # endregion --- [ Run 2: multi-environment with manifests + hooks ] ----------------------- #
@@ -229,6 +249,16 @@ run "environment_with_certificate" {
     condition     = length(tls_self_signed_cert.environment["demo-secured"].cert_pem) > 0
     error_message = "Expected non-empty cert_pem; got empty."
   }
+
+  assert {
+    condition     = tls_private_key.environment["demo-secured"].algorithm == "ECDSA"
+    error_message = "Expected certificate private keys to use ECDSA."
+  }
+
+  assert {
+    condition     = tls_self_signed_cert.environment["demo-secured"].is_ca_certificate == false
+    error_message = "Expected synthetic certificates not to be CA certificates."
+  }
 }
 
 # endregion --- [ Run 3: certificate (single-optional dynamic block) ] -------------------- #
@@ -263,6 +293,11 @@ run "environment_with_rotation" {
   assert {
     condition     = output.environments["demo-rotating"].rotation_enabled == true
     error_message = "Expected rotating.rotation_enabled=true; got false."
+  }
+
+  assert {
+    condition     = time_rotating.environment_rotation["demo-rotating"].triggers["framework_source"] == "NWarila/terraform-framework-template"
+    error_message = "Expected rotation metadata to carry framework_source."
   }
 }
 
@@ -325,6 +360,81 @@ run "duplicate_names_rejected" {
     all_environments = [
       { name = "duplicate", owner = "team-a", tier = "dev" },
       { name = "duplicate", owner = "team-b", tier = "staging" },
+    ]
+  }
+
+  expect_failures = [
+    var.all_environments,
+  ]
+}
+
+run "world_writable_manifest_permissions_rejected" {
+
+  command = plan
+
+  variables {
+    environment_prefix = "demo"
+    global_tag         = "test-validation"
+
+    all_environments = [
+      {
+        name  = "bad-permissions"
+        owner = "test"
+        tier  = "dev"
+        manifests = [
+          { filename = "bad.yaml", content = "bad", permissions = "0666" },
+        ]
+      }
+    ]
+  }
+
+  expect_failures = [
+    var.all_environments,
+  ]
+}
+
+run "certificate_validity_over_one_year_rejected" {
+
+  command = plan
+
+  variables {
+    environment_prefix = "demo"
+    global_tag         = "test-validation"
+
+    all_environments = [
+      {
+        name  = "bad-cert-validity"
+        owner = "test"
+        tier  = "dev"
+        certificate = {
+          validity_period_hours = 8761
+        }
+      }
+    ]
+  }
+
+  expect_failures = [
+    var.all_environments,
+  ]
+}
+
+run "ca_certificate_rejected" {
+
+  command = plan
+
+  variables {
+    environment_prefix = "demo"
+    global_tag         = "test-validation"
+
+    all_environments = [
+      {
+        name  = "bad-ca"
+        owner = "test"
+        tier  = "dev"
+        certificate = {
+          is_ca_certificate = true
+        }
+      }
     ]
   }
 

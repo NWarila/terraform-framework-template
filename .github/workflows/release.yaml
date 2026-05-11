@@ -53,3 +53,4 @@ jobs:
     with:
       # renovate: datasource=github-releases depName=hashicorp/terraform extractVersion=^v(?<version>.*)$ versioning=hashicorp
       terraform_version: "1.15.1"
+      repo_type: framework
