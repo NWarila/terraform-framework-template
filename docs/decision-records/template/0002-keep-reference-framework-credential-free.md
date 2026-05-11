@@ -3,12 +3,12 @@
 | Field          | Value                                   |
 | -------------- | --------------------------------------- |
 | Status         | Accepted                                |
-| Date           | 2026-05-11                              |
+| Date           | 2026-05-07                              |
 | Authors        | Nick Warila (@NWarila)                  |
 | Decision-maker | Nick Warila (sole portfolio maintainer) |
-| Consulted      | None.                                   |
-| Informed       | None.                                   |
-| Reversibility  | Medium                                  |
+| Consulted      | Reference-framework threat model.       |
+| Informed       | Derivative framework maintainers via threat-model docs. |
+| Reversibility  | High                                    |
 | Review-by      | N/A (Accepted)                          |
 
 ## TL;DR
@@ -120,7 +120,8 @@ None (current).
 
 ## Implementing PRs
 
-Pending.
+- [`87323cd`](https://github.com/NWarila/terraform-framework-template/commit/87323cdbe7a9ae73508d9d00e9fe061f3a4d2474) introduced the credential-free synthetic reference framework.
+- [`075cef1`](https://github.com/NWarila/terraform-framework-template/commit/075cef1554c658b284556b1d8b6fb6a3ba695766) documented the provider-free threat model around that reference shape.
 
 ## Related ADRs
 

@@ -3,12 +3,12 @@
 | Field          | Value                                   |
 | -------------- | --------------------------------------- |
 | Status         | Accepted                                |
-| Date           | 2026-05-11                              |
+| Date           | 2026-05-09                              |
 | Authors        | Nick Warila (@NWarila)                  |
 | Decision-maker | Nick Warila (sole portfolio maintainer) |
-| Consulted      | None.                                   |
-| Informed       | None.                                   |
-| Reversibility  | Medium                                  |
+| Consulted      | Runner-template ownership boundary and overlay tests. |
+| Informed       | Runner consumers via reusable deploy workflow docs. |
+| Reversibility  | Costly                                  |
 | Review-by      | N/A (Accepted)                          |
 
 ## TL;DR
@@ -31,7 +31,7 @@ This ADR names the ownership boundary so changes land in the repo that owns the 
 1. **Clear source of truth.** Framework patterns should be authored where the framework code and reusable deploy workflow live.
 2. **Small runner blast radius.** Runner repos should change inventory and pins, not shared Terraform implementation.
 3. **Reviewability.** A framework code change should be reviewed once in the framework repo, then consumed by SHA.
-4. **Drift control.** Template-tier baseline manifests should mirror stable framework scaffolding into derivative frameworks.
+4. **Drift control.** Template-tier baseline manifests should distinguish byte-identical scaffolding from starter material derivative frameworks rewrite.
 5. **Overlay safety.** Runtime composition must be explicit and constrained.
 
 ## Considered Options
@@ -52,7 +52,7 @@ Framework repositories derived from this template own:
 - Framework CI helpers under `tools/ci/`.
 - OPA policy and documentation that govern framework behavior.
 - Framework-template ADRs under `docs/decision-records/template/`.
-- `baseline-manifest.json` entries for stable scaffold files derivative frameworks should mirror.
+- `baseline-manifest.json` propagation categories: byte-identical scaffold and rewriteable starter material.
 
 Runner repositories own:
 
@@ -94,7 +94,7 @@ Overlay composition is allowed only as an execution mechanism: a runner checks o
 1. Framework repositories MUST contain `terraform/`; runner repositories MUST NOT rely on local framework source as their source of truth.
 2. Runner workflow callers MUST pin framework references to immutable SHAs.
 3. Overlay tooling MUST use explicit source-to-destination mappings, not broad workspace copies.
-4. Template-tier framework ADRs MUST be authored in this repository and mirrored to derivative frameworks through `baseline-manifest.json`.
+4. Template-tier framework ADRs MUST be authored in this repository and mirrored to derivative frameworks through the `byte_identical` section of `baseline-manifest.json`.
 5. Runner-specific exceptions MUST live in the runner repository's `docs/decision-records/repo/` scope.
 
 ## Consequences
@@ -130,7 +130,9 @@ None (current).
 
 ## Implementing PRs
 
-Pending.
+- [#2](https://github.com/NWarila/terraform-framework-template/issues/2) / [`1710398`](https://github.com/NWarila/terraform-framework-template/commit/17103984360050d06e9b55b7983b48a44c63bfb7) added the reusable deploy workflow and OPA policy surface that runners consume by pinned `framework_ref`.
+- [`b6753c7`](https://github.com/NWarila/terraform-framework-template/commit/b6753c71554ba0ecdec73a4b58e72a226be14a15) hardened the reusable release and policy gates inherited by derivative frameworks.
+- [`c0af840`](https://github.com/NWarila/terraform-framework-template/commit/c0af840) aligned the overlay threat model with the framework/runner ownership boundary.
 
 ## Related ADRs
 

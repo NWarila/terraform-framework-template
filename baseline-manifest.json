@@ -1,6 +1,6 @@
 {
-  "version": "1",
-  "files": [
+  "version": "2",
+  "byte_identical": [
     {
       "source": ".editorconfig",
       "target": ".editorconfig"
@@ -130,6 +130,14 @@
       "target": "tools/check_baseline_manifest.py"
     },
     {
+      "source": "tools/check_baseline_self_consistency.py",
+      "target": "tools/check_baseline_self_consistency.py"
+    },
+    {
+      "source": "tools/check_adr_schema.py",
+      "target": "tools/check_adr_schema.py"
+    },
+    {
       "source": "tools/check_docs_layout.py",
       "target": "tools/check_docs_layout.py"
     },
@@ -186,14 +194,6 @@
       "target": "tests/ci/validate_framework_ref.bats"
     },
     {
-      "source": "policies/opa/framework_plan.rego",
-      "target": "policies/opa/framework_plan.rego"
-    },
-    {
-      "source": "policies/opa/framework_plan_test.rego",
-      "target": "policies/opa/framework_plan_test.rego"
-    },
-    {
       "source": "policies/opa/repo_hygiene.rego",
       "target": "policies/opa/repo_hygiene.rego"
     },
@@ -202,8 +202,26 @@
       "target": "policies/opa/repo_hygiene_test.rego"
     },
     {
+      "source": "policies/opa/terraform_plan.rego",
+      "target": "policies/opa/terraform_plan.rego"
+    },
+    {
+      "source": "policies/opa/terraform_plan_test.rego",
+      "target": "policies/opa/terraform_plan_test.rego"
+    },
+    {
       "source": "fixtures/integration/basic/README.md",
       "target": "fixtures/integration/basic/README.md"
+    }
+  ],
+  "scaffold_starter": [
+    {
+      "source": "policies/opa/synthetic_framework_plan.rego",
+      "target": "policies/opa/synthetic_framework_plan.rego"
+    },
+    {
+      "source": "policies/opa/synthetic_framework_plan_test.rego",
+      "target": "policies/opa/synthetic_framework_plan_test.rego"
     }
   ]
 }

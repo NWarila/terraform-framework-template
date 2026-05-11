@@ -66,6 +66,7 @@ def install(package: str) -> None:
 
 
 def opa_policy() -> None:
+    install("pyyaml==6.0.3")
     opa_input = capture([PYTHON, "tools/build_opa_input.py"])
     run(
         [
@@ -102,7 +103,7 @@ def opa_plan() -> None:
     )
     plan_json = capture(["terraform", "-chdir=terraform", "show", "-json", plan_path])
     opa_input = capture([PYTHON, "tools/build_plan_input.py"], input_text=plan_json)
-    for query in ("data.framework_plan.deny[_]", "data.terraform_plan.deny[_]"):
+    for query in ("data.synthetic_framework_plan.deny[_]", "data.terraform_plan.deny[_]"):
         run(
             [
                 "opa",
@@ -156,7 +157,10 @@ def build_steps(case: str) -> dict[str, Step]:
         "opa-test": lambda: run(["opa", "test", "policies/opa"]),
         "opa-policy": opa_policy,
         "opa-plan": opa_plan,
-        "manifest-check": lambda: run([PYTHON, "tools/check_baseline_manifest.py"]),
+        "manifest-check": lambda: (
+            run([PYTHON, "tools/check_baseline_manifest.py"]),
+            run([PYTHON, "tools/check_baseline_self_consistency.py"]),
+        ),
         "docs": lambda: run(["terraform-docs", "--config", ".terraform-docs.yml", "terraform"]),
         "docs-diff": lambda: run(
             [

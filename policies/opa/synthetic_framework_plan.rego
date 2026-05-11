@@ -1,10 +1,12 @@
-# framework_plan - Terraform plan-aware policy for the reference framework.
+# synthetic_framework_plan - starter Terraform plan policy for this reference framework.
 #
 # This package consumes normalized `terraform show -json tfplan` output from
 # tools/build_plan_input.py. repo_hygiene checks source/workflow posture;
-# framework_plan checks planned Terraform resources.
+# synthetic_framework_plan checks this template's synthetic-provider resources.
+# Derivative frameworks should rewrite this starter policy for their real
+# providers; it is intentionally not part of the byte-identical baseline.
 
-package framework_plan
+package synthetic_framework_plan
 
 import rego.v1
 

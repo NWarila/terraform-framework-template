@@ -54,10 +54,10 @@
 # ----- [ OPA policies ] ---------------------------------------------------------------------------
 !/policies/
 !/policies/opa/
-!/policies/opa/framework_plan.rego
-!/policies/opa/framework_plan_test.rego
 !/policies/opa/repo_hygiene.rego
 !/policies/opa/repo_hygiene_test.rego
+!/policies/opa/synthetic_framework_plan.rego
+!/policies/opa/synthetic_framework_plan_test.rego
 !/policies/opa/terraform_plan.rego
 !/policies/opa/terraform_plan_test.rego
 
@@ -67,6 +67,7 @@
 !/tools/build_plan_input.py
 !/tools/check_adr_schema.py
 !/tools/check_baseline_manifest.py
+!/tools/check_baseline_self_consistency.py
 !/tools/check_docs_layout.py
 !/tools/verify.py
 !/tools/ci/

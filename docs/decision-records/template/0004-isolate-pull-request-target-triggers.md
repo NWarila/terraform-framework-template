@@ -3,11 +3,11 @@
 | Field          | Value                                   |
 | -------------- | --------------------------------------- |
 | Status         | Accepted                                |
-| Date           | 2026-05-11                              |
+| Date           | 2026-05-10                              |
 | Authors        | Nick Warila (@NWarila)                  |
 | Decision-maker | Nick Warila (sole portfolio maintainer) |
-| Consulted      | None.                                   |
-| Informed       | None.                                   |
+| Consulted      | zizmor findings and pull-request-target OPA policy. |
+| Informed       | Derivative frameworks via release and auto-merge docs. |
 | Reversibility  | Medium                                  |
 | Review-by      | N/A (Accepted)                          |
 
@@ -179,8 +179,9 @@ None (current).
 
 ## Implementing PRs
 
-Pending. The implementing change splits auto-merge and release callers, adds
-the OPA release-trigger rule, and wires ADR schema/index checks into CI.
+- [`b6753c7`](https://github.com/NWarila/terraform-framework-template/commit/b6753c71554ba0ecdec73a4b58e72a226be14a15) split release and policy gates so release evidence and auto-merge have separate workflow surfaces.
+- [`3220fae`](https://github.com/NWarila/terraform-framework-template/commit/3220faee402aaf60d525aefbbbd59fb7246d1794) bound the OPA pull-request-target policy to concrete workflow paths.
+- [`e097db6`](https://github.com/NWarila/terraform-framework-template/commit/e097db67c6e3ba3357fced6058683b937b4b2970) documented the scoped zizmor waiver for the isolated auto-merge caller.
 
 ## Related ADRs
 

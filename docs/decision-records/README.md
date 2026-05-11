@@ -3,7 +3,7 @@
 This directory holds the Architecture Decision Records (ADRs) governing this framework. Per [org ADR-0001](org/0001-use-architecture-decision-records.md), ADRs are organized into three scopes:
 
 - `org/` - byte-identical mirrors of org-baseline ADRs from [`nwarila-platform/.github`](https://github.com/nwarila-platform/.github). These apply to every repo in the org regardless of stack.
-- `template/` - framework-template ADRs owned by this repository. Derivative frameworks mirror these files byte-for-byte through `baseline-manifest.json`.
+- `template/` - framework-template ADRs owned by this repository. Derivative frameworks mirror the `byte_identical` baseline entries through `baseline-manifest.json`.
 - `repo/` - repository-specific ADRs for this repository only. This scope is currently empty.
 
 `terraform-framework-template` is itself a type-template: it owns the canonical framework command surface, Terraform module shape, validation tooling, reusable deploy workflow, and framework-tier decisions that derivative framework repositories inherit.

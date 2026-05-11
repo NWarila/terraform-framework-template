@@ -1,6 +1,6 @@
-package framework_plan_test
+package synthetic_framework_plan_test
 
-import data.framework_plan
+import data.synthetic_framework_plan
 import rego.v1
 
 valid_resources := {
@@ -52,11 +52,11 @@ valid_resources := {
 }
 
 test_valid_framework_plan_allowed if {
-	count(framework_plan.deny) == 0 with input as valid_resources
+	count(synthetic_framework_plan.deny) == 0 with input as valid_resources
 }
 
 test_certificate_validity_over_one_year_denied if {
-	denials := framework_plan.deny with input as {
+	denials := synthetic_framework_plan.deny with input as {
 		"resources": [{
 			"address": "tls_self_signed_cert.environment[\"bad\"]",
 			"type": "tls_self_signed_cert",
@@ -67,7 +67,7 @@ test_certificate_validity_over_one_year_denied if {
 }
 
 test_tls_private_key_algorithm_denied if {
-	denials := framework_plan.deny with input as {
+	denials := synthetic_framework_plan.deny with input as {
 		"resources": [{
 			"address": "tls_private_key.environment[\"bad\"]",
 			"type": "tls_private_key",
@@ -78,7 +78,7 @@ test_tls_private_key_algorithm_denied if {
 }
 
 test_local_file_world_writable_denied if {
-	denials := framework_plan.deny with input as {
+	denials := synthetic_framework_plan.deny with input as {
 		"resources": [{
 			"address": "local_file.manifest[\"bad\"]",
 			"type": "local_file",
@@ -89,7 +89,7 @@ test_local_file_world_writable_denied if {
 }
 
 test_random_string_too_short_denied if {
-	denials := framework_plan.deny with input as {
+	denials := synthetic_framework_plan.deny with input as {
 		"resources": [{
 			"address": "random_string.environment_secret[\"bad\"]",
 			"type": "random_string",
@@ -103,7 +103,7 @@ test_random_string_too_short_denied if {
 }
 
 test_metadata_resource_missing_framework_source_denied if {
-	denials := framework_plan.deny with input as {
+	denials := synthetic_framework_plan.deny with input as {
 		"resources": [{
 			"address": "null_resource.lifecycle_hook[\"bad\"]",
 			"type": "null_resource",

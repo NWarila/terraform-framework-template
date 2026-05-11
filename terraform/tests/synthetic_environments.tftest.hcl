@@ -54,8 +54,8 @@ run "single_environment_minimum" {
   }
 
   assert {
-    condition     = contains(keys(output.runner_inventory), "repos/public/reference-runner-inventory.yaml")
-    error_message = "Expected runner_inventory output to include repos/public/reference-runner-inventory.yaml."
+    condition     = alltrue([for path in keys(output.runner_inventory) : startswith(path, "repos/")])
+    error_message = "Expected every runner_inventory output key to live under repos/."
   }
 
   # Tier defaults injected from the JSON fixture (data-source-injection

@@ -2,7 +2,7 @@ PYTHON ?= python3
 TFLINT ?= tflint
 INTEGRATION_CASE ?= basic
 
-.PHONY: fmt fmt-check init validate tflint ruff yamllint test workflow-helper-tests opa-test opa-policy opa-plan manifest-check docs docs-diff docs-layout lint policy docs-check integration ci verify
+.PHONY: fmt fmt-check init validate tflint ruff yamllint test workflow-helper-tests opa-test opa-policy opa-plan manifest-check docs docs-diff docs-layout adr-schema lint policy docs-check integration ci verify
 
 # Mutating: rewrites HCL in place. Use locally before committing.
 fmt:
@@ -53,7 +53,7 @@ opa-policy:
 
 # OPA plan enforcement. Builds a real tfplan from the multi-environment
 # example, normalizes `terraform show -json`, and evaluates planned
-# Terraform resources against policies/opa/framework_plan.rego.
+# Terraform resources against the shared and synthetic OPA plan policies.
 opa-plan:
 	$(PYTHON) tools/verify.py opa-plan
 
@@ -77,6 +77,9 @@ docs-diff:
 docs-layout:
 	$(PYTHON) tools/verify.py docs-layout
 
+adr-schema:
+	$(PYTHON) tools/verify.py adr-schema
+
 lint:
 	$(MAKE) fmt-check
 	$(MAKE) init
@@ -93,6 +96,7 @@ policy:
 docs-check:
 	$(MAKE) docs-diff
 	$(MAKE) docs-layout
+	$(MAKE) adr-schema
 
 integration:
 	$(PYTHON) tools/verify.py integration --case $(INTEGRATION_CASE)
