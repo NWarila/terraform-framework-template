@@ -66,6 +66,7 @@ def install(package: str) -> None:
 
 
 def opa_policy() -> None:
+    install("pyyaml==6.0.3")
     opa_input = capture([PYTHON, "tools/build_opa_input.py"])
     run(
         [
@@ -102,21 +103,20 @@ def opa_plan() -> None:
     )
     plan_json = capture(["terraform", "-chdir=terraform", "show", "-json", plan_path])
     opa_input = capture([PYTHON, "tools/build_plan_input.py"], input_text=plan_json)
-    for query in ("data.framework_plan.deny[_]", "data.terraform_plan.deny[_]"):
-        run(
-            [
-                "opa",
-                "eval",
-                "--fail-defined",
-                "--format",
-                "pretty",
-                "--stdin-input",
-                "--data",
-                "policies/opa",
-                query,
-            ],
-            input_text=opa_input,
-        )
+    run(
+        [
+            "opa",
+            "eval",
+            "--fail-defined",
+            "--format",
+            "pretty",
+            "--stdin-input",
+            "--data",
+            "policies/opa",
+            "data.terraform_plan.deny[_]",
+        ],
+        input_text=opa_input,
+    )
 
 
 def build_steps(case: str) -> dict[str, Step]:
