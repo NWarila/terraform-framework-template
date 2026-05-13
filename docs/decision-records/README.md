@@ -2,7 +2,7 @@
 
 This directory holds the Architecture Decision Records (ADRs) governing this framework. Per [org ADR-0001](org/0001-use-architecture-decision-records.md), ADRs are organized into three scopes:
 
-- `org/` - byte-identical mirrors of org-baseline ADRs from [`nwarila-platform/.github`](https://github.com/nwarila-platform/.github). These apply to every repo in the org regardless of stack.
+- `org/` - byte-identical mirrors of org-baseline ADRs from [`NWarila/.github`](https://github.com/NWarila/.github). These apply to every repo in the org regardless of stack.
 - `template/` - framework-template ADRs owned by this repository. Derivative frameworks mirror the `byte_identical` baseline entries through `baseline-manifest.json`.
 - `repo/` - repository-specific ADRs for this repository only. This scope is currently empty.
 
@@ -20,7 +20,7 @@ ADR-template/0003 was withdrawn before release and is intentionally absent.
 
 ## Org ADRs
 
-The `org/` scope is mirrored from `nwarila-platform/.github` and enforced by the org drift gate.
+The `org/` scope is mirrored from `NWarila/.github` and enforced by the org drift gate.
 
 | ADR | Status | Decision |
 | --- | --- | --- |
@@ -28,5 +28,6 @@ The `org/` scope is mirrored from `nwarila-platform/.github` and enforced by the
 | [ADR-0002](org/0002-adopt-diataxis-documentation-framework.md) | Accepted | Use Diátaxis for non-ADR documentation. |
 | [ADR-0003](org/0003-use-deny-all-gitignore-strategy.md) | Accepted | Use deny-all `.gitignore` allowlists. |
 | [ADR-0004](org/0004-use-renovate-for-dependency-updates.md) | Accepted | Use Renovate for dependency updates. |
+| [ADR-0005](org/0005-pin-terraform-and-provider-versions-exactly.md) | Accepted | Pin Terraform and provider versions exactly. |
 
 The `.gitkeep` placeholder in `repo/` keeps the directory skeleton complete until this repository has a repo-specific ADR.

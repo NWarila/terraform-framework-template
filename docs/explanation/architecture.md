@@ -25,6 +25,6 @@ The reference framework's own validation intentionally uses a local backend so t
 
 ## External dependencies
 
-- [`nwarila-platform/.github`](https://github.com/nwarila-platform/.github) provides org-baseline ADR masters mirrored under `docs/decision-records/org/`.
+- [`NWarila/.github`](https://github.com/NWarila/.github) provides org-baseline ADR masters mirrored under `docs/decision-records/org/`.
 - [`NWarila/drift-gate`](https://github.com/NWarila/drift-gate) enforces byte-identical mirrors for org and template baseline files.
 - Terraform, TFLint, OPA, and terraform-docs form the local and CI validation toolchain.
