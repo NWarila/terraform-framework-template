@@ -186,7 +186,15 @@ def build_steps(case: str) -> dict[str, Step]:
             install("yamllint==1.35.1"),
             run([PYTHON, "-m", "yamllint", "-d", YAMLLINT_CONFIG, ".github/workflows/"]),
         ),
-        "test": lambda: run(["terraform", "-chdir=terraform", "test"]),
+        "test": lambda: (
+            (ROOT / "artifacts").mkdir(exist_ok=True),
+            run([
+                "terraform",
+                "-chdir=terraform",
+                "test",
+                "-junit-xml=../artifacts/terraform-test.xml",
+            ]),
+        ),
         "workflow-helper-tests": lambda: (
             run([*command_from_env("SHELLCHECK", "shellcheck"), *shell_helpers]),
             run([PYTHON, "tools/ci/check_workflow_run_inputs.py", ".github/workflows"]),
