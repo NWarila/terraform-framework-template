@@ -149,6 +149,18 @@ def opa_plan() -> None:
     )
 
 
+def terraform_test() -> None:
+    (ROOT / "artifacts").mkdir(exist_ok=True)
+    run(
+        [
+            "terraform",
+            "-chdir=terraform",
+            "test",
+            "-junit-xml=../artifacts/terraform-test.xml",
+        ]
+    )
+
+
 def build_steps(case: str) -> dict[str, Step]:
     shell_helpers = sorted(
         path.relative_to(ROOT).as_posix() for path in (ROOT / "tools" / "ci").glob("*.sh")
@@ -186,15 +198,7 @@ def build_steps(case: str) -> dict[str, Step]:
             install("yamllint==1.35.1"),
             run([PYTHON, "-m", "yamllint", "-d", YAMLLINT_CONFIG, ".github/workflows/"]),
         ),
-        "test": lambda: (
-            (ROOT / "artifacts").mkdir(exist_ok=True),
-            run([
-                "terraform",
-                "-chdir=terraform",
-                "test",
-                "-junit-xml=../artifacts/terraform-test.xml",
-            ]),
-        ),
+        "test": terraform_test,
         "workflow-helper-tests": lambda: (
             run([*command_from_env("SHELLCHECK", "shellcheck"), *shell_helpers]),
             run([PYTHON, "tools/ci/check_workflow_run_inputs.py", ".github/workflows"]),
