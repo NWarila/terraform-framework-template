@@ -50,7 +50,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y bats shellcheck
       - name: ShellCheck workflow helpers
-        run: shellcheck tools/ci/*.sh
+        run: shellcheck tools/install_ci_tools.sh tools/ci/*.sh
       - name: Check workflow run-block input binding
         run: python tools/ci/check_workflow_run_inputs.py .github/workflows
       - name: Bats workflow helper tests
@@ -87,41 +87,21 @@ jobs:
           terraform_version: "1.15.1"
           terraform_wrapper: false
 
-      - name: Install OPA
-        # renovate: datasource=github-releases depName=open-policy-agent/opa
+      - name: Install pinned CI tools
         env:
-          OPA_VERSION: "1.10.0"
-        run: |
-          set -euo pipefail
-          curl -fsSL -o /usr/local/bin/opa \
-            "https://openpolicyagent.org/downloads/v${OPA_VERSION}/opa_linux_amd64_static"
-          chmod +x /usr/local/bin/opa
-          opa version
-
-      - name: Install terraform-docs
-        # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
-        env:
-          TERRAFORM_DOCS_VERSION: "0.23.0"
-        run: |
-          set -euo pipefail
-          curl -fsSL -o /tmp/td.tar.gz \
-            "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz"
-          tar xzf /tmp/td.tar.gz -C /tmp
-          install -m 0755 /tmp/terraform-docs /usr/local/bin/terraform-docs
-          terraform-docs --version
-
-      - name: Install TFLint
-        # renovate: datasource=github-releases depName=terraform-linters/tflint
-        env:
+          # renovate: datasource=github-releases depName=terraform-linters/tflint
           TFLINT_VERSION: "0.62.0"
+          # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
+          TERRAFORM_DOCS_VERSION: "0.23.0"
+          # renovate: datasource=github-releases depName=open-policy-agent/opa
+          OPA_VERSION: "1.10.0"
+        run: bash tools/install_ci_tools.sh
+
+      - name: Install Bats and ShellCheck
         run: |
           set -euo pipefail
-          mkdir -p /tmp/tflint
-          curl -fsSL -o /tmp/tflint.zip \
-            "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip"
-          unzip -q /tmp/tflint.zip -d /tmp/tflint
-          install -m 0755 /tmp/tflint/tflint /usr/local/bin/tflint
-          tflint --version
+          sudo apt-get update
+          sudo apt-get install -y bats shellcheck
 
       - name: Verify
         run: python tools/verify.py verify
