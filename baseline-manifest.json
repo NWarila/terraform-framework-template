@@ -54,6 +54,10 @@
                                "target":  ".github/renovate.json5"
                            },
                            {
+                               "source":  ".github/workflows/reusable-auto-merge.yaml",
+                               "target":  ".github/workflows/reusable-auto-merge.yaml"
+                           },
+                           {
                                "source":  ".github/workflows/reusable-codeql.yaml",
                                "target":  ".github/workflows/reusable-codeql.yaml"
                            },
@@ -62,8 +66,20 @@
                                "target":  ".github/workflows/reusable-iac-security.yaml"
                            },
                            {
+                               "source":  ".github/workflows/reusable-release-evidence.yaml",
+                               "target":  ".github/workflows/reusable-release-evidence.yaml"
+                           },
+                           {
+                               "source":  ".github/workflows/reusable-release-please.yaml",
+                               "target":  ".github/workflows/reusable-release-please.yaml"
+                           },
+                           {
                                "source":  ".github/workflows/reusable-scorecard.yaml",
                                "target":  ".github/workflows/reusable-scorecard.yaml"
+                           },
+                           {
+                               "source":  ".github/workflows/reusable-terraform-deploy.yaml",
+                               "target":  ".github/workflows/reusable-terraform-deploy.yaml"
                            },
                            {
                                "source":  ".github/workflows/security.yaml",
@@ -84,6 +100,10 @@
                            {
                                "source":  "docs/reference/mirroring.md",
                                "target":  "docs/reference/mirroring.md"
+                           },
+                           {
+                               "source":  "docs/reference/quality-gates.md",
+                               "target":  "docs/reference/quality-gates.md"
                            },
                            {
                                "source":  "docs/explanation/.gitkeep",
@@ -134,6 +154,18 @@
                                "target":  "tools/check_docs_layout.py"
                            },
                            {
+                               "source":  "tools/check_privileged_workflows.py",
+                               "target":  "tools/check_privileged_workflows.py"
+                           },
+                           {
+                               "source":  "tools/install_ci_tools.sh",
+                               "target":  "tools/install_ci_tools.sh"
+                           },
+                           {
+                               "source":  "tools/run_privileged_workflow_tests.py",
+                               "target":  "tools/run_privileged_workflow_tests.py"
+                           },
+                           {
                                "source":  "tools/verify.py",
                                "target":  "tools/verify.py"
                            },
@@ -178,6 +210,22 @@
                                "target":  "tests/ci/validate_framework_ref.bats"
                            },
                            {
+                               "source":  "tests/fixtures/privileged-workflows/bad/.github/workflows/auto-merge.yaml",
+                               "target":  "tests/fixtures/privileged-workflows/bad/.github/workflows/auto-merge.yaml"
+                           },
+                           {
+                               "source":  "tests/fixtures/privileged-workflows/good/.github/workflows/auto-merge.yaml",
+                               "target":  "tests/fixtures/privileged-workflows/good/.github/workflows/auto-merge.yaml"
+                           },
+                           {
+                               "source":  "tests/fixtures/privileged-workflows/reusable-bad/.github/workflows/caller.yaml",
+                               "target":  "tests/fixtures/privileged-workflows/reusable-bad/.github/workflows/caller.yaml"
+                           },
+                           {
+                               "source":  "tests/fixtures/privileged-workflows/reusable-bad/.github/workflows/reusable-pwn.yaml",
+                               "target":  "tests/fixtures/privileged-workflows/reusable-bad/.github/workflows/reusable-pwn.yaml"
+                           },
+                           {
                                "source":  "policies/opa/repo_hygiene.rego",
                                "target":  "policies/opa/repo_hygiene.rego"
                            },
@@ -196,6 +244,10 @@
                            {
                                "source":  "fixtures/integration/basic/README.md",
                                "target":  "fixtures/integration/basic/README.md"
+                           },
+                           {
+                               "source":  "terraform/.terraform.lock.hcl",
+                               "target":  "terraform/.terraform.lock.hcl"
                            }
                        ],
     "scaffold_starter":  [

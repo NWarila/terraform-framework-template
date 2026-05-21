@@ -306,9 +306,10 @@ jobs:
               -backend-config="bucket=${BACKEND_BUCKET}" \
               -backend-config="key=${TF_BACKEND_STATE_KEY}" \
               -backend-config="region=${AWS_REGION}" \
-              -input=false
+              -input=false \
+              -lockfile=readonly
           else
-            terraform init -input=false
+            terraform init -input=false -lockfile=readonly
           fi
 
       - name: terraform plan
