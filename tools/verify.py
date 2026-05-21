@@ -118,7 +118,6 @@ def opa_plan() -> None:
             "init",
             "-backend=false",
             "-input=false",
-            "-lockfile=readonly",
         ]
     )
     run(
@@ -172,7 +171,6 @@ def build_steps(case: str) -> dict[str, Step]:
                 "init",
                 "-backend=false",
                 "-input=false",
-                "-lockfile=readonly",
             ]
         ),
         "validate": lambda: run(["terraform", "-chdir=terraform", "validate"]),

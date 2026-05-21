@@ -88,7 +88,6 @@
 !/fixtures/integration/basic/README.md
 
 !/terraform/
-!/terraform/.terraform.lock.hcl
 !/terraform/backend.tf
 !/terraform/data.tf
 !/terraform/locals.tf
