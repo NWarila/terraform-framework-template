@@ -27,7 +27,7 @@ fmt-check:
 	terraform -chdir=terraform fmt -check -recursive
 
 init:
-	terraform -chdir=terraform init -backend=false -input=false
+	terraform -chdir=terraform init -backend=false -input=false -lockfile=readonly
 
 validate:
 	terraform -chdir=terraform validate
