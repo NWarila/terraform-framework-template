@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 IGNORED_DIRS = {".terraform", ".synthetic-output", ".tflint.d", "__pycache__"}
-IGNORED_FILES = {".terraform.lock.hcl"}
+IGNORED_FILES: set[str] = set()
 IGNORED_SUFFIXES = (".tfstate", ".tfstate.backup", ".tfplan")
 
 
@@ -132,7 +132,16 @@ def run_terraform_gates(repo_root: Path, workspace: Path, config: dict, case: di
     tflint = os.environ.get("TFLINT", "tflint")
 
     run([terraform, f"-chdir={workspace}", "fmt", "-check", "-recursive"])
-    run([terraform, f"-chdir={workspace}", "init", "-backend=false", "-input=false"])
+    run(
+        [
+            terraform,
+            f"-chdir={workspace}",
+            "init",
+            "-backend=false",
+            "-input=false",
+            "-lockfile=readonly",
+        ]
+    )
     run([terraform, f"-chdir={workspace}", "validate"])
 
     if case.get("tflint", False):

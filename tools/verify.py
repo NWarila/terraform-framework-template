@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
+import shlex
 import subprocess
 import sys
 from collections.abc import Callable
@@ -65,6 +67,26 @@ def install(package: str) -> None:
     run([PYTHON, "-m", "pip", "install", "--no-cache-dir", package])
 
 
+def command_from_env(name: str, default: str) -> list[str]:
+    raw = os.environ.get(name)
+    if raw is None or raw.strip() == "":
+        return [default]
+
+    raw = raw.strip()
+    if raw.startswith("["):
+        parsed = json.loads(raw)
+        if not isinstance(parsed, list) or not all(
+            isinstance(item, str) and item for item in parsed
+        ):
+            raise SystemExit(f"{name} must be a JSON array of command strings.")
+        return parsed
+
+    if Path(raw).exists():
+        return [raw]
+
+    return shlex.split(raw, posix=os.name != "nt")
+
+
 def opa_policy() -> None:
     install("pyyaml==6.0.3")
     opa_input = capture([PYTHON, "tools/build_opa_input.py"])
@@ -89,7 +111,16 @@ def opa_plan() -> None:
     plan_dir.mkdir(parents=True, exist_ok=True)
     plan_path = "../.tmp/opa-plan/framework-plan.tfplan"
 
-    run(["terraform", "-chdir=terraform", "init", "-backend=false", "-input=false"])
+    run(
+        [
+            "terraform",
+            "-chdir=terraform",
+            "init",
+            "-backend=false",
+            "-input=false",
+            "-lockfile=readonly",
+        ]
+    )
     run(
         [
             "terraform",
@@ -123,6 +154,9 @@ def build_steps(case: str) -> dict[str, Step]:
     shell_helpers = sorted(
         path.relative_to(ROOT).as_posix() for path in (ROOT / "tools" / "ci").glob("*.sh")
     )
+    install_helper = ROOT / "tools" / "install_ci_tools.sh"
+    if install_helper.is_file():
+        shell_helpers.append(install_helper.relative_to(ROOT).as_posix())
     bats_tests = sorted(
         path.relative_to(ROOT).as_posix() for path in (ROOT / "tests" / "ci").glob("*.bats")
     )
@@ -132,7 +166,14 @@ def build_steps(case: str) -> dict[str, Step]:
             ["terraform", "-chdir=terraform", "fmt", "-check", "-recursive"]
         ),
         "init": lambda: run(
-            ["terraform", "-chdir=terraform", "init", "-backend=false", "-input=false"]
+            [
+                "terraform",
+                "-chdir=terraform",
+                "init",
+                "-backend=false",
+                "-input=false",
+                "-lockfile=readonly",
+            ]
         ),
         "validate": lambda: run(["terraform", "-chdir=terraform", "validate"]),
         "tflint": lambda: (
@@ -149,14 +190,21 @@ def build_steps(case: str) -> dict[str, Step]:
         ),
         "test": lambda: run(["terraform", "-chdir=terraform", "test"]),
         "workflow-helper-tests": lambda: (
-            run(["shellcheck", *shell_helpers]),
+            run([*command_from_env("SHELLCHECK", "shellcheck"), *shell_helpers]),
             run([PYTHON, "tools/ci/check_workflow_run_inputs.py", ".github/workflows"]),
-            run(["bats", *bats_tests]),
+            run([*command_from_env("BATS", "bats"), *bats_tests]),
+        ),
+        "privileged-workflows": lambda: (
+            install("pyyaml==6.0.3"),
+            run([PYTHON, "tools/check_privileged_workflows.py", "--repo-root", "."]),
+            run([PYTHON, "tools/run_privileged_workflow_tests.py"]),
         ),
         "opa-test": lambda: run(["opa", "test", "policies/opa"]),
         "opa-policy": opa_policy,
         "opa-plan": opa_plan,
-        "manifest-check": lambda: run([PYTHON, "tools/check_baseline_manifest.py"]),
+        "manifest-check": lambda: run(
+            [PYTHON, "tools/check_baseline_manifest.py", "--check-present-sources"]
+        ),
         "docs": lambda: run(["terraform-docs", "--config", ".terraform-docs.yml", "terraform"]),
         "docs-diff": lambda: run(
             [
@@ -179,7 +227,15 @@ TARGETS: dict[str, tuple[str, ...]] = {
     "lint": ("fmt-check", "init", "validate", "tflint", "ruff", "yamllint"),
     "policy": ("opa-test", "opa-policy", "opa-plan"),
     "docs-check": ("docs-diff", "docs-layout", "adr-schema"),
-    "ci": ("lint", "test", "policy", "docs-check", "manifest-check"),
+    "ci": (
+        "lint",
+        "test",
+        "workflow-helper-tests",
+        "privileged-workflows",
+        "policy",
+        "docs-check",
+        "manifest-check",
+    ),
     "verify": ("ci", "integration"),
 }
 
