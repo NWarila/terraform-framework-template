@@ -6,7 +6,7 @@
   // baseline for every Terraform-framework consumer in the portfolio. This
   // file is the single source of truth for Renovate behavior across framework
   // repos; consumers extend it via
-  // `extends: ["github>NWarila/terraform-framework-template"]` (see org
+  // `extends: ["github>NWarila/terraform-framework-template//.github/renovate.json5"]` (see org
   // ADR-0004 in NWarila/.github for the per-template-baseline model).
   //
   // Rules in this file:
