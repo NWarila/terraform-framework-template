@@ -161,6 +161,16 @@ def terraform_test() -> None:
     )
 
 
+def lockfile_check() -> None:
+    lockfile = ROOT / "terraform" / ".terraform.lock.hcl"
+    if not lockfile.is_file():
+        raise SystemExit(
+            "missing terraform/.terraform.lock.hcl; "
+            "run 'terraform -chdir=terraform init' and commit the result"
+        )
+    print(f"lockfile present: {lockfile.relative_to(ROOT).as_posix()}")
+
+
 def build_steps(case: str) -> dict[str, Step]:
     shell_helpers = sorted(
         path.relative_to(ROOT).as_posix() for path in (ROOT / "tools" / "ci").glob("*.sh")
@@ -215,6 +225,7 @@ def build_steps(case: str) -> dict[str, Step]:
         "manifest-check": lambda: run(
             [PYTHON, "tools/check_baseline_manifest.py", "--check-present-sources"]
         ),
+        "lockfile-check": lockfile_check,
         "docs": lambda: run(["terraform-docs", "--config", ".terraform-docs.yml", "terraform"]),
         "docs-diff": lambda: run(
             [
@@ -245,6 +256,7 @@ TARGETS: dict[str, tuple[str, ...]] = {
         "policy",
         "docs-check",
         "manifest-check",
+        "lockfile-check",
     ),
     "verify": ("ci", "integration"),
 }

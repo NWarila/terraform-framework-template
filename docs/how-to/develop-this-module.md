@@ -4,7 +4,7 @@
 
 Install the same toolchain CI uses:
 
-- Terraform 1.15.1.
+- Terraform 1.15.4.
 - TFLint 0.62.0.
 - OPA 1.10.0.
 - terraform-docs 0.23.0.

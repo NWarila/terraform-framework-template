@@ -139,7 +139,6 @@ def run_terraform_gates(repo_root: Path, workspace: Path, config: dict, case: di
             "init",
             "-backend=false",
             "-input=false",
-            "-lockfile=readonly",
         ]
     )
     run([terraform, f"-chdir={workspace}", "validate"])

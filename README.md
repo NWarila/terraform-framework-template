@@ -10,7 +10,7 @@ hand-rolling each piece.
 
 Install the same external tools CI uses before running the full local gates:
 
-- Terraform CLI 1.15.1
+- Terraform CLI 1.15.4
 - TFLint 0.62.0
 - terraform-docs 0.23.0
 - OPA 1.10.0
@@ -27,6 +27,8 @@ python tools/verify.py integration
 ```
 
 `python tools/verify.py ci` runs formatting, init, validate, TFLint, tests, OPA checks, and terraform-docs drift checks. `python tools/verify.py integration` builds an ephemeral workspace under `.tmp/ci/integration/` from `terraform/`, copies the single-environment example, and runs the Terraform-facing gates against that assembled module.
+
+The complete gate inventory lives in [`docs/reference/quality-gates.md`](docs/reference/quality-gates.md).
 
 ## Patterns demonstrated
 
