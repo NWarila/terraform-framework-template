@@ -71,7 +71,7 @@ on:
           each runner can move forward independently with Renovate's help.
         required: false
         type: string
-        default: "1.15.1"
+        default: "1.15.4"
       apply:
         description: |
           When true, apply the saved Terraform plan after the
@@ -306,10 +306,9 @@ jobs:
               -backend-config="bucket=${BACKEND_BUCKET}" \
               -backend-config="key=${TF_BACKEND_STATE_KEY}" \
               -backend-config="region=${AWS_REGION}" \
-              -input=false \
-              -lockfile=readonly
+              -input=false
           else
-            terraform init -input=false -lockfile=readonly
+            terraform init -input=false
           fi
 
       - name: terraform plan

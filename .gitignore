@@ -52,6 +52,7 @@
 !/docs/reference/mirroring.md
 !/docs/reference/quality-gates.md
 !/docs/reference/release-gates.md
+!/docs/reference/runner-protocol.md
 !/docs/reference/terraform.md
 !/docs/explanation/
 !/docs/explanation/.gitkeep
@@ -88,6 +89,7 @@
 !/fixtures/integration/basic/README.md
 
 !/terraform/
+!/terraform/.terraform.lock.hcl
 !/terraform/backend.tf
 !/terraform/data.tf
 !/terraform/locals.tf
