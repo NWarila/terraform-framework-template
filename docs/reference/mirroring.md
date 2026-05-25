@@ -16,6 +16,11 @@ new derivative is born but should be rewritten for its real providers. Drift
 gate validates those entries as part of the manifest contract, but it does not
 byte-compare them in consumers.
 
+Use `byte_identical` only for files a downstream framework should keep
+byte-for-byte with this template. Use `scaffold_starter` for examples, fixtures,
+and implementation seeds that demonstrate the pattern but are expected to change
+in a real framework.
+
 ## Framework-Owned Layer
 
 The `terraform/` implementation, examples, provider choices, and framework ADRs
