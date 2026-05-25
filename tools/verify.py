@@ -208,6 +208,10 @@ def build_steps(case: str) -> dict[str, Step]:
             install("yamllint==1.35.1"),
             run([PYTHON, "-m", "yamllint", "-d", YAMLLINT_CONFIG, ".github/workflows/"]),
         ),
+        "actionlint": lambda: run([*command_from_env("ACTIONLINT", "actionlint")]),
+        "markdownlint": lambda: run(
+            [*command_from_env("MARKDOWNLINT", "markdownlint-cli2"), "**/*.md"]
+        ),
         "test": terraform_test,
         "workflow-helper-tests": lambda: (
             run([*command_from_env("SHELLCHECK", "shellcheck"), *shell_helpers]),
@@ -250,10 +254,12 @@ TARGETS: dict[str, tuple[str, ...]] = {
     "docs-check": ("docs-diff", "docs-layout", "adr-schema"),
     "ci": (
         "lint",
+        "actionlint",
         "test",
         "workflow-helper-tests",
         "privileged-workflows",
         "policy",
+        "markdownlint",
         "docs-check",
         "manifest-check",
         "lockfile-check",

@@ -61,9 +61,9 @@ This framework follows the "packer-aligned" style established in [`nwarila-platf
 | [`terraform/providers.tf`](terraform/providers.tf) | Provider blocks. Reference variables directly, no logic. |
 | [`terraform/backend.tf`](terraform/backend.tf) | Backend config. Local for this showcase; commented S3/GCS/azurerm/HCP variants for real frameworks. |
 | [`terraform/data.tf`](terraform/data.tf) | Data sources. Demonstrates the data-source-injection pattern. |
-| [`terraform/variables.tf`](terraform/variables.tf) | **The big file.** Provider-level flat vars + one mega-object per managed resource type with `optional(<type>, <default>)` baked in. |
+| [`terraform/variables.tf`](terraform/variables.tf) | Consumer-facing input contract. Provider-level flat vars + one mega-object per managed resource type with `optional(<type>, <default>)` baked in. |
 | [`terraform/locals.tf`](terraform/locals.tf) | Single `locals { }` block with region sections. Expands variables into a keyed map; injects data-source values; flattens nested lists into composite-keyed for_each maps. |
-| [`terraform/main.tf`](terraform/main.tf) | **The dumb file.** Pure `each.value["key"]` lookups + dynamic blocks. No computation. |
+| [`terraform/main.tf`](terraform/main.tf) | Resource instantiation layer. Pure `each.value["key"]` lookups + dynamic blocks. No computation. |
 | [`terraform/outputs.tf`](terraform/outputs.tf) | Per-env composed outputs + sensitive output handling demo. |
 | [`terraform/tests/*.tftest.hcl`](terraform/tests/) | `terraform test` runs that actually `apply` against synthetic providers and assert on outputs. |
 
