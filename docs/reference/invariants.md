@@ -10,3 +10,16 @@
 - **Generated Terraform docs are checked, not trusted.** `docs/reference/terraform.md` must match `terraform-docs` output.
 - **Template-tier baseline entries must declare propagation semantics.** `baseline-manifest.json` is load-bearing for derivative framework drift gates. `byte_identical` entries are mirrored exactly; `scaffold_starter` entries are starter material that derivatives rewrite for their provider surface.
 - **Framework-template ADRs are owned here.** Shared framework decisions live in `docs/decision-records/template/` and are mirrored to derivative frameworks through `baseline-manifest.json`.
+
+## Template-Family Conventions
+
+- Framework templates expose exactly one tool-specific reusable workflow using
+  `reusable-<tool>-framework-<verb>.yaml`. The verb names the natural action
+  for that tool family; this template uses `deploy` because Terraform framework
+  consumers plan and apply the framework module through the reusable.
+- Framework `verify.py ci` targets keep `workflow-helper-tests` and
+  `privileged-workflows` explicit, and `docs-check` owns ADR schema validation.
+  Tool-specific lint, test, and policy targets may differ by stack, but each
+  difference must be listed in `docs/reference/quality-gates.md`.
+- Runner templates and runner consumers do not copy the framework reusable
+  naming pattern unless they own executable framework logic.

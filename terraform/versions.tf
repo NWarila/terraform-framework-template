@@ -4,7 +4,7 @@ terraform {
   # (pin Terraform and provider versions exactly), exact pins only —
   # the `~>` pessimistic operator is rejected by the OPA policy in
   # policies/opa/repo_hygiene.rego.
-  required_version = "= 1.15.1"
+  required_version = "= 1.15.4"
 
   # Specify the required providers. All five are official HashiCorp
   # providers selected for the do-nothing showcase: each demonstrates
