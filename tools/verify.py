@@ -181,6 +181,29 @@ def build_steps(case: str) -> dict[str, Step]:
     bats_tests = sorted(
         path.relative_to(ROOT).as_posix() for path in (ROOT / "tests" / "ci").glob("*.bats")
     )
+
+    def tflint() -> None:
+        run(["tflint", "--init", "--config", str(ROOT / ".tflint.hcl")])
+        run(["tflint", "--config", str(ROOT / ".tflint.hcl"), "--chdir", "terraform"])
+
+    def ruff() -> None:
+        install("ruff==0.13.0")
+        run([PYTHON, "-m", "ruff", "check", "tools/"])
+
+    def yamllint() -> None:
+        install("yamllint==1.35.1")
+        run([PYTHON, "-m", "yamllint", "-d", YAMLLINT_CONFIG, ".github/workflows/"])
+
+    def workflow_helper_tests() -> None:
+        run([*command_from_env("SHELLCHECK", "shellcheck"), *shell_helpers])
+        run([PYTHON, "tools/ci/check_workflow_run_inputs.py", ".github/workflows"])
+        run([*command_from_env("BATS", "bats"), *bats_tests])
+
+    def privileged_workflows() -> None:
+        install("pyyaml==6.0.3")
+        run([PYTHON, "tools/check_privileged_workflows.py", "--repo-root", "."])
+        run([PYTHON, "tools/run_privileged_workflow_tests.py"])
+
     return {
         "fmt": lambda: run(["terraform", "-chdir=terraform", "fmt", "-recursive"]),
         "fmt-check": lambda: run(
@@ -196,33 +219,16 @@ def build_steps(case: str) -> dict[str, Step]:
             ]
         ),
         "validate": lambda: run(["terraform", "-chdir=terraform", "validate"]),
-        "tflint": lambda: (
-            run(["tflint", "--init", "--config", str(ROOT / ".tflint.hcl")]),
-            run(["tflint", "--config", str(ROOT / ".tflint.hcl"), "--chdir", "terraform"]),
-        ),
-        "ruff": lambda: (
-            install("ruff==0.13.0"),
-            run([PYTHON, "-m", "ruff", "check", "tools/"]),
-        ),
-        "yamllint": lambda: (
-            install("yamllint==1.35.1"),
-            run([PYTHON, "-m", "yamllint", "-d", YAMLLINT_CONFIG, ".github/workflows/"]),
-        ),
+        "tflint": tflint,
+        "ruff": ruff,
+        "yamllint": yamllint,
         "actionlint": lambda: run([*command_from_env("ACTIONLINT", "actionlint")]),
         "markdownlint": lambda: run(
             [*command_from_env("MARKDOWNLINT", "markdownlint-cli2"), "**/*.md"]
         ),
         "test": terraform_test,
-        "workflow-helper-tests": lambda: (
-            run([*command_from_env("SHELLCHECK", "shellcheck"), *shell_helpers]),
-            run([PYTHON, "tools/ci/check_workflow_run_inputs.py", ".github/workflows"]),
-            run([*command_from_env("BATS", "bats"), *bats_tests]),
-        ),
-        "privileged-workflows": lambda: (
-            install("pyyaml==6.0.3"),
-            run([PYTHON, "tools/check_privileged_workflows.py", "--repo-root", "."]),
-            run([PYTHON, "tools/run_privileged_workflow_tests.py"]),
-        ),
+        "workflow-helper-tests": workflow_helper_tests,
+        "privileged-workflows": privileged_workflows,
         "opa-test": lambda: run(["opa", "test", "policies/opa"]),
         "opa-policy": opa_policy,
         "opa-plan": opa_plan,
