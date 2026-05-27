@@ -35,6 +35,7 @@
 !/.github/workflows/reusable-iac-security.yaml
 !/.github/workflows/reusable-release-evidence.yaml
 !/.github/workflows/reusable-release-please.yaml
+!/.github/workflows/reusable-repo-hygiene.yaml
 !/.github/workflows/reusable-scorecard.yaml
 !/.github/workflows/reusable-terraform-deploy.yaml
 !/.github/workflows/security.yaml
