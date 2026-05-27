@@ -62,8 +62,7 @@ def validate_entries(field: str, entries: Any, *, allow_empty: bool) -> tuple[li
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    args = parser.parse_args()
+    argparse.ArgumentParser(description=__doc__).parse_args()
 
     manifest = Path("baseline-manifest.json")
     try:
