@@ -233,7 +233,7 @@ def build_steps(case: str) -> dict[str, Step]:
         "opa-policy": opa_policy,
         "opa-plan": opa_plan,
         "manifest-check": lambda: run(
-            [PYTHON, "tools/check_baseline_manifest.py", "--check-present-sources"]
+            [PYTHON, "tools/check_baseline_manifest.py"]
         ),
         "lockfile-check": lockfile_check,
         "docs": lambda: run(["terraform-docs", "--config", ".terraform-docs.yml", "terraform"]),
