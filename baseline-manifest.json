@@ -30,20 +30,8 @@
       "target": ".github/workflows/security.yaml"
     },
     {
-      "source": "docs/reference/invariants.md",
-      "target": "docs/reference/invariants.md"
-    },
-    {
       "source": "docs/reference/mirroring.md",
       "target": "docs/reference/mirroring.md"
-    },
-    {
-      "source": "docs/reference/quality-gates.md",
-      "target": "docs/reference/quality-gates.md"
-    },
-    {
-      "source": "docs/reference/release-gates.md",
-      "target": "docs/reference/release-gates.md"
     },
     {
       "source": "docs/reference/runner-protocol.md",
@@ -82,6 +70,18 @@
     {
       "source": "baseline-manifest.json",
       "target": "baseline-manifest.json"
+    },
+    {
+      "source": "docs/reference/invariants.md",
+      "target": "docs/reference/invariants.md"
+    },
+    {
+      "source": "docs/reference/quality-gates.md",
+      "target": "docs/reference/quality-gates.md"
+    },
+    {
+      "source": "docs/reference/release-gates.md",
+      "target": "docs/reference/release-gates.md"
     }
   ]
 }

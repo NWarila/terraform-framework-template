@@ -32,7 +32,8 @@ Drift-gate enforces byte-equality on these entries in every consumer.
 | --- | --- |
 | `.editorconfig`, `.gitattributes`, `.markdownlint-cli2.jsonc`, `.pre-commit-config.yaml`, `.terraform-docs.yml`, `.tflint.hcl` | Local editor / formatter / linter configs |
 | `.github/workflows/security.yaml` | Canonical security caller — every consumer runs it identically |
-| `docs/reference/{invariants,mirroring,quality-gates,release-gates,runner-protocol}.md` | Canonical framework reference docs |
+| `docs/reference/mirroring.md` (this file) | Canonical statement of the manifest contract |
+| `docs/reference/runner-protocol.md` | Canonical contract for how runners call the framework deploy reusable |
 | `tools/check_docs_layout.py` | Invoked by the consumer's local `make ci` for Diataxis layout enforcement |
 | `tools/install_ci_tools.sh` | Invoked by the consumer's PR-validation workflow to install pinned CI tooling |
 
@@ -49,6 +50,9 @@ Consumers receive them at bootstrap and customize freely.
 | `.github/renovate.json5` | Consumers add their own dep groups (terraform-framework-template SHA pin, terraform CLI, providers, etc.) |
 | `.github/PULL_REQUEST_TEMPLATE.md` | Consumers tailor PR fields to their domain |
 | `baseline-manifest.json` | Template repos that derive from this one publish their own manifest |
+| `docs/reference/invariants.md` | Consumers add framework-specific invariants and may drop those tied to this template's synthetic providers |
+| `docs/reference/quality-gates.md` | Consumers map the gate-role taxonomy onto their actual workflow names |
+| `docs/reference/release-gates.md` | Consumers document the gates that actually run in their own release pipeline |
 
 ## Template-Only (NOT in the manifest)
 
