@@ -1,0 +1,126 @@
+name: Reusable Repo Hygiene
+
+# Universal repo-hygiene policy enforced by every framework consumer.
+# Evaluates this template's `policies/opa/repo_hygiene.rego` against the
+# consumer's checked-out tree without requiring the consumer to mirror the
+# policy file or the build_opa_input.py helper locally.
+#
+# Rules enforced (see policies/opa/repo_hygiene.rego for source):
+#
+# - All workflow `uses:` references are pinned to a 40-character commit SHA
+# - `terraform { required_version = "= X.Y.Z" }` uses exact = pin
+# - Every `required_providers` version uses exact = pin
+# - `pull_request_target` boundary safety (no PR-controlled checkout/diff/etc.)
+#
+# Caller pattern:
+#   uses: <owner>/terraform-framework-template/.github/workflows/reusable-repo-hygiene.yaml@<sha>
+#   with:
+#     framework_ref: <pinned-sha-of-this-template>
+
+on:
+  workflow_call:
+    inputs:
+      framework_ref:
+        description: |
+          40-character commit SHA of this framework
+          (NWarila/terraform-framework-template) to source the policy and
+          input-builder from. SHA pins are required for reproducibility.
+        required: true
+        type: string
+      opa_version:
+        description: OPA version to install.
+        required: false
+        type: string
+        default: "1.10.0"
+      advisory:
+        description: |
+          When true, the policy step still runs but never fails the job.
+          Useful for consumers transitioning toward conformance whose
+          existing repos have known findings.
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    name: repo-hygiene / verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out consumer
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check out framework at framework_ref
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: NWarila/terraform-framework-template
+          ref: ${{ inputs.framework_ref }}
+          path: framework
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Validate framework_ref
+        env:
+          FRAMEWORK_REF: ${{ inputs.framework_ref }}
+        run: bash framework/tools/ci/validate_framework_ref.sh "${FRAMEWORK_REF}"
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Install OPA
+        env:
+          OPA_VERSION: ${{ inputs.opa_version }}
+        run: |
+          set -euo pipefail
+          bin="opa_linux_amd64_static"
+          base="https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}"
+          workdir="$(mktemp -d)"
+          curl --fail --silent --show-error --location -o "${workdir}/${bin}" "${base}/${bin}"
+          curl --fail --silent --show-error --location -o "${workdir}/${bin}.sha256" "${base}/${bin}.sha256"
+          expected="$(awk '{print $1}' "${workdir}/${bin}.sha256")"
+          actual="$(sha256sum "${workdir}/${bin}" | awk '{print $1}')"
+          if [ "$expected" != "$actual" ]; then
+            echo "error: opa sha256 mismatch (expected ${expected}, got ${actual})" >&2
+            exit 1
+          fi
+          install -m 0755 "${workdir}/${bin}" "${HOME}/.local/bin/opa"
+          mkdir -p "${HOME}/.local/bin"
+          echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
+
+      - name: Build OPA input from consumer tree
+        id: build
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet "pyyaml==6.0.3"
+          python framework/tools/build_opa_input.py > opa-input.json
+          echo "bytes=$(wc -c < opa-input.json)" >> "${GITHUB_OUTPUT}"
+
+      - name: Evaluate repo_hygiene policy
+        if: ${{ !inputs.advisory }}
+        run: |
+          set -euo pipefail
+          opa eval \
+            --fail-defined \
+            --format pretty \
+            --input opa-input.json \
+            --data framework/policies/opa \
+            'data.repo_hygiene.deny[_]'
+
+      - name: Evaluate repo_hygiene policy (advisory mode)
+        if: ${{ inputs.advisory }}
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          opa eval \
+            --fail-defined \
+            --format pretty \
+            --input opa-input.json \
+            --data framework/policies/opa \
+            'data.repo_hygiene.deny[_]'
