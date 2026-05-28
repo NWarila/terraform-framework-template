@@ -1,5 +1,9 @@
 # terraform-framework-template
 
+[![CI](https://github.com/NWarila/terraform-framework-template/actions/workflows/ci.yaml/badge.svg)](https://github.com/NWarila/terraform-framework-template/actions/workflows/ci.yaml)
+[![Security](https://github.com/NWarila/terraform-framework-template/actions/workflows/security.yaml/badge.svg)](https://github.com/NWarila/terraform-framework-template/actions/workflows/security.yaml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 A reference template for building Terraform framework repositories: the kind of
 repo a platform team derives real cloud frameworks from. It ships the canonical
 module shape, validation tooling, OPA policy, and release-evidence pipeline so a
