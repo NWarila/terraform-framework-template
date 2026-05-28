@@ -90,8 +90,8 @@ jobs:
             echo "error: opa sha256 mismatch (expected ${expected}, got ${actual})" >&2
             exit 1
           fi
-          install -m 0755 "${workdir}/${bin}" "${HOME}/.local/bin/opa"
           mkdir -p "${HOME}/.local/bin"
+          install -m 0755 "${workdir}/${bin}" "${HOME}/.local/bin/opa"
           echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
 
       - name: Build OPA input from consumer tree
