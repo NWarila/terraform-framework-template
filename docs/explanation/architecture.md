@@ -6,10 +6,12 @@
 
 - A complete synthetic Terraform module under [`terraform/`](../../terraform/) that demonstrates framework structure without external services.
 - The framework deploy reusable, [`reusable-terraform-deploy.yaml`](../../.github/workflows/reusable-terraform-deploy.yaml), which runner repos call for plan/apply.
-- Universal reusable workflows for CodeQL, Scorecard, IaC security, release-please, release evidence, and trusted-bot auto-merge.
+- The release-evidence reusable, [`reusable-release-evidence.yaml`](../../.github/workflows/reusable-release-evidence.yaml), which the release workflow calls to attest release artifacts.
 - A template-tier `baseline-manifest.json` for derivative frameworks that separates byte-identical scaffold from starter files derivatives rewrite.
 - Framework-template ADRs under [`docs/decision-records/template/`](../decision-records/template/) that explain the shared framework decisions derivative frameworks inherit.
 - The normalized Terraform CI harness under [`tools/ci/`](../../tools/ci/).
+
+It does not own the universal security and release-automation workflows. CodeQL, Scorecard, IaC security, release-please, and trusted-bot auto-merge live in [`NWarila/.github`](https://github.com/NWarila/.github); this template's `security.yaml`, `release.yaml`, and `auto-merge.yaml` entrypoints only *call* those org reusables pinned by SHA.
 
 It does not own runner inventory data. Runner repos keep `repos/public/` and `repos/private/` and overlay that data into a pinned framework checkout at validation or deploy time.
 
