@@ -30,12 +30,9 @@ Drift-gate enforces byte-equality on these entries in every consumer.
 
 | Path | Why it's mirrored |
 | --- | --- |
-| `.editorconfig`, `.gitattributes`, `.markdownlint-cli2.jsonc`, `.pre-commit-config.yaml`, `.terraform-docs.yml`, `.tflint.hcl` | Local editor / formatter / linter configs |
 | `.github/workflows/security.yaml` | Canonical security caller — every consumer runs it identically |
 | `docs/reference/mirroring.md` (this file) | Canonical statement of the manifest contract |
 | `docs/reference/runner-protocol.md` | Canonical contract for how runners call the framework deploy reusable |
-| `tools/check_docs_layout.py` | Invoked by the consumer's local `make ci` for Diataxis layout enforcement |
-| `tools/install_ci_tools.sh` | Invoked by the consumer's PR-validation workflow to install pinned CI tooling |
 
 ## scaffold_starter
 
@@ -44,6 +41,7 @@ Consumers receive them at bootstrap and customize freely.
 
 | Path | Why it's a starter |
 | --- | --- |
+| `.editorconfig`, `.gitattributes`, `.markdownlint-cli2.jsonc`, `.pre-commit-config.yaml`, `.terraform-docs.yml`, `.tflint.hcl` | Local editor / formatter / linter configs consumers receive at bootstrap and may tune per-repo |
 | `Makefile` | Consumers add their own targets (graph rendering, release-evidence helpers, etc.) |
 | `.gitignore` | Consumers extend the allowlist with their own examples/, tests/, terraform/ files |
 | `.github/CODEOWNERS` | Consumers set their own ownership |
@@ -53,6 +51,8 @@ Consumers receive them at bootstrap and customize freely.
 | `docs/reference/invariants.md` | Consumers add framework-specific invariants and may drop those tied to this template's synthetic providers |
 | `docs/reference/quality-gates.md` | Consumers map the gate-role taxonomy onto their actual workflow names |
 | `docs/reference/release-gates.md` | Consumers document the gates that actually run in their own release pipeline |
+| `tools/check_docs_layout.py` | Seeded for Diataxis layout enforcement in the consumer's local `make ci`; consumers may adapt it to their own docs tree |
+| `tools/install_ci_tools.sh` | Seeded to install pinned CI tooling; consumers re-pin the tool versions their own pipeline needs |
 
 ## Template-Only (NOT in the manifest)
 
