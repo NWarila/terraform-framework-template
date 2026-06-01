@@ -2,14 +2,6 @@
   "version": "2",
   "byte_identical": [
     {
-      "source": ".github/workflows/security.yaml",
-      "target": ".github/workflows/security.yaml"
-    },
-    {
-      "source": "docs/reference/mirroring.md",
-      "target": "docs/reference/mirroring.md"
-    },
-    {
       "source": "docs/reference/runner-protocol.md",
       "target": "docs/reference/runner-protocol.md"
     }
@@ -64,8 +56,16 @@
       "target": "baseline-manifest.json"
     },
     {
+      "source": ".github/workflows/security.yaml",
+      "target": ".github/workflows/security.yaml"
+    },
+    {
       "source": "docs/reference/invariants.md",
       "target": "docs/reference/invariants.md"
+    },
+    {
+      "source": "docs/reference/mirroring.md",
+      "target": "docs/reference/mirroring.md"
     },
     {
       "source": "docs/reference/quality-gates.md",
