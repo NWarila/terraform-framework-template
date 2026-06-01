@@ -8,8 +8,13 @@ hardening pass on 2026-05-11. They record decisions that already existed in
 the template design or were made during that release-readiness pass, rather
 than a sequence of independent historical decisions.
 
+ADR-template/0005 records the later manifest-classification rule that lets
+derivative frameworks repoint org-control-plane workflow callers to their own
+namespace while keeping namespace-agnostic framework files drift-gated.
+
 ADR-template/0003 was withdrawn before release and is intentionally absent.
 
 - [0001: Pin Terraform and Provider Versions Exactly](0001-pin-terraform-and-provider-versions-exactly.md)
 - [0002: Keep Reference Framework Credential-Free](0002-keep-reference-framework-credential-free.md)
 - [0004: Isolate Pull Request Target Triggers](0004-isolate-pull-request-target-triggers.md)
+- [0005: Classify Org Control Plane Callers as Scaffold](0005-classify-org-control-plane-callers-as-scaffold.md)
