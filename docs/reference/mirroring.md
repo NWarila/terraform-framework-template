@@ -30,8 +30,6 @@ Drift-gate enforces byte-equality on these entries in every consumer.
 
 | Path | Why it's mirrored |
 | --- | --- |
-| `.github/workflows/security.yaml` | Canonical security caller — every consumer runs it identically |
-| `docs/reference/mirroring.md` (this file) | Canonical statement of the manifest contract |
 | `docs/reference/runner-protocol.md` | Canonical contract for how runners call the framework deploy reusable |
 
 ## scaffold_starter
@@ -48,7 +46,9 @@ Consumers receive them at bootstrap and customize freely.
 | `.github/renovate.json5` | Consumers add their own dep groups (terraform-framework-template SHA pin, terraform CLI, providers, etc.) |
 | `.github/PULL_REQUEST_TEMPLATE.md` | Consumers tailor PR fields to their domain |
 | `baseline-manifest.json` | Template repos that derive from this one publish their own manifest |
+| `.github/workflows/security.yaml` | Seeded security caller; consumers keep the shape but repoint org reusable workflows to their owning org control plane |
 | `docs/reference/invariants.md` | Consumers add framework-specific invariants and may drop those tied to this template's synthetic providers |
+| `docs/reference/mirroring.md` (this file) | Seeded manifest-contract explanation; consumers may replace org-baseline repository names |
 | `docs/reference/quality-gates.md` | Consumers map the gate-role taxonomy onto their actual workflow names |
 | `docs/reference/release-gates.md` | Consumers document the gates that actually run in their own release pipeline |
 | `tools/check_docs_layout.py` | Seeded for Diataxis layout enforcement in the consumer's local `make ci`; consumers may adapt it to their own docs tree |
