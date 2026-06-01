@@ -15,6 +15,7 @@ This directory holds the Architecture Decision Records (ADRs) governing this fra
 | [ADR-template/0001](template/0001-pin-terraform-and-provider-versions-exactly.md) | Accepted | Pin the Terraform CLI and every provider to exact versions. |
 | [ADR-template/0002](template/0002-keep-reference-framework-credential-free.md) | Accepted | Keep this reference framework credential-free, cost-free, and synthetic. |
 | [ADR-template/0004](template/0004-isolate-pull-request-target-triggers.md) | Accepted | Keep `pull_request_target` isolated to trusted-bot auto-merge, never release publishing. |
+| [ADR-template/0005](template/0005-classify-org-control-plane-callers-as-scaffold.md) | Accepted | Classify org-control-plane caller files as scaffold starter files, not byte-identical files. |
 
 ADR-template/0003 was withdrawn before release and is intentionally absent.
 
@@ -29,5 +30,6 @@ The `org/` scope is mirrored from `NWarila/.github` and enforced by the org drif
 | [ADR-0003](org/0003-use-deny-all-gitignore-strategy.md) | Accepted | Use deny-all `.gitignore` allowlists. |
 | [ADR-0004](org/0004-use-renovate-for-dependency-updates.md) | Accepted | Use Renovate for dependency updates. |
 | [ADR-0005](org/0005-pin-terraform-and-provider-versions-exactly.md) | Accepted | Pin Terraform and provider versions exactly. |
+| [ADR-0006](org/0006-keep-github-control-planes-namespace-local.md) | Accepted | Keep GitHub control planes namespace-local. |
 
 The `.gitkeep` placeholder in `repo/` keeps the directory skeleton complete until this repository has a repo-specific ADR.
