@@ -1,15 +1,20 @@
 # ADR-0006: Keep GitHub Control Planes Namespace-Local
 
-| Field          | Value                                   |
-| -------------- | --------------------------------------- |
-| Status         | Accepted                                |
-| Date           | 2026-06-01                              |
-| Authors        | Nick Warila (@NWarila)           |
-| Decision-maker | Nick Warila (sole portfolio maintainer) |
-| Consulted      | CI findings from repo-hygiene, ADR drift, and reusable workflow rollout. |
-| Informed       | Maintainers of adopting repositories under `NWarila`. |
-| Reversibility  | Medium                                  |
-| Review-by      | N/A (Accepted)                          |
+| Field            | Value                                                                       |
+| ---------------- | --------------------------------------------------------------------------- |
+| ID               | ADR-0006                                                                    |
+| Scope            | Org baseline                                                                |
+| Status           | Accepted                                                                    |
+| Decision-subject | Namespace-local ownership for GitHub control-plane governance.              |
+| Date accepted    | 2026-06-01                                                                  |
+| Date             | 2026-06-02                                                                  |
+| Last reviewed    | 2026-06-02                                                                  |
+| Authors          | Nick Warila (@NWarila)                                                      |
+| Decision-makers  | Nick Warila (sole portfolio maintainer)                                     |
+| Consulted        | CI findings from repo-hygiene, ADR drift, and reusable workflow rollout.    |
+| Informed         | Maintainers of adopting repositories under `NWarila`.                       |
+| Reversibility    | Medium                                                                      |
+| Review-by        | 2026-11-29                                                                  |
 
 ## TL;DR
 
@@ -143,3 +148,8 @@ None (current).
 
 This decision supports configuration management and separation of duties. It keeps policy authority aligned with repository ownership and makes the source of CI, ADR, and community-health controls explicit in source control. It is not, by itself, a compliance claim.
 
+## Changelog
+
+| Date       | Change                                    | Reason                                      | Author/Role                       | Body-diff? |
+| ---------- | ----------------------------------------- | ------------------------------------------- | --------------------------------- | ---------- |
+| 2026-06-02 | Refreshed metadata and removed final blank lint drift. | Apply ADR-0001 living metadata and keep Markdown lint green. | Portfolio maintainer / governance | Yes        |
