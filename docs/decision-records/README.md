@@ -36,4 +36,8 @@ The `org/` scope is mirrored from `NWarila/.github` and enforced by the org drif
 | [ADR-0005](org/0005-pin-terraform-and-provider-versions-exactly.md) | Accepted | Pin Terraform and provider versions exactly. |
 | [ADR-0006](org/0006-keep-github-control-planes-namespace-local.md) | Accepted | Keep GitHub control planes namespace-local. |
 
-The `.gitkeep` placeholder in `repo/` keeps the directory skeleton complete until this repository has a repo-specific ADR.
+## Repo ADRs
+
+| ADR | Status | Decision |
+| --- | --- | --- |
+| [ADR-repo/0001](repo/0001-use-synthetic-providers-for-reference-framework.md) | Accepted | Use synthetic providers (`null`, `random`, `local`, `time`, `tls`) as the do-nothing framework substrate. |
