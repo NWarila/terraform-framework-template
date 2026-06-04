@@ -261,6 +261,20 @@ def lockfile_check() -> None:
     print(f"lockfile present: {lockfile.relative_to(ROOT).as_posix()}")
 
 
+def workflow_bom_check() -> None:
+    offenders = []
+    workflow_dir = ROOT / ".github" / "workflows"
+    for path in sorted(workflow_dir.glob("*.y*ml")):
+        if path.read_bytes().startswith(b"\xef\xbb\xbf"):
+            offenders.append(path.relative_to(ROOT).as_posix())
+
+    if offenders:
+        formatted = ", ".join(offenders)
+        raise SystemExit(f"workflow YAML files must not start with a UTF-8 BOM: {formatted}")
+
+    print("workflow BOM check passed")
+
+
 def build_steps(case: str) -> dict[str, Step]:
     shell_helpers = sorted(
         path.relative_to(ROOT).as_posix() for path in (ROOT / "tools" / "ci").glob("*.sh")
@@ -318,6 +332,7 @@ def build_steps(case: str) -> dict[str, Step]:
         ),
         "test": terraform_test,
         "workflow-helper-tests": workflow_helper_tests,
+        "workflow-bom-check": workflow_bom_check,
         "privileged-workflows": privileged_workflows,
         "opa-test": lambda: run_opa(["opa", "test", "policies/opa"]),
         "opa-policy": opa_policy,
@@ -351,6 +366,7 @@ TARGETS: dict[str, tuple[str, ...]] = {
     "ci": (
         "lint",
         "actionlint",
+        "workflow-bom-check",
         "test",
         "workflow-helper-tests",
         "privileged-workflows",
