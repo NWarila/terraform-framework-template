@@ -4,7 +4,7 @@
 | -------------- | --------------------------------------- |
 | Status         | Accepted                                |
 | Date           | 2026-06-01                              |
-| Authors        | Nick Warila (@NWarila)           |
+| Authors        | Nick Warila (@NWarila)                  |
 | Decision-maker | Nick Warila (sole portfolio maintainer) |
 | Consulted      | Drift-gate findings from `nwarila-platform/proxmox-terraform-framework`. |
 | Informed       | Maintainers of derivative Terraform framework repositories. |
@@ -126,4 +126,3 @@ Pending. This ADR is implemented by the PR that adds it, demotes the org-control
 ## Compliance Notes
 
 This ADR supports configuration management by making the drift-gate contract match the intended ownership boundary. It does not itself prove compliance.
-
