@@ -13,9 +13,7 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  checks: write
+permissions: {}
 
 concurrency:
   group: drift-gate-${{ github.event.pull_request.number || github.ref }}
@@ -26,10 +24,13 @@ jobs:
     name: org-baseline / verify
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read # required for the drift-gate action to read this repository's manifest
+      checks: write # required for drift-gate to publish inline PR annotations
     steps:
       - name: Drift gate (org baseline)
         # renovate: datasource=git-refs depName=NWarila/drift-gate
-        uses: NWarila/drift-gate@a29b46ba971b55956994d51684c44d6861f7b4bf # main @ 2026-05-11
+        uses: NWarila/drift-gate@dac07c2b2a30a084b3577d4712549291ae99879c # NWarila/drift-gate main @ 2026-05-29
         with:
           source-repo: NWarila/.github
           # renovate: depName=NWarila/.github packageName=NWarila/.github currentValue=main

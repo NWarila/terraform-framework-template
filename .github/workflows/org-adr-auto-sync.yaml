@@ -5,9 +5,7 @@ on:
     - cron: "3 7 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pull-requests: read
+permissions: {}
 
 concurrency:
   group: org-adr-auto-sync-${{ github.ref }}
@@ -17,9 +15,9 @@ jobs:
   sync:
     name: org ADR auto-sync
     permissions:
-      contents: read
-      pull-requests: read
-    uses: NWarila/.github/.github/workflows/reusable-org-adr-auto-sync.yaml@e8bc517828a9915a401096305124dff316b76644
+      contents: read # required for the reusable sync workflow to compare mirrored ADR files
+      pull-requests: read # required to detect an existing sync PR before creating another
+    uses: NWarila/.github/.github/workflows/reusable-org-adr-auto-sync.yaml@e8bc517828a9915a401096305124dff316b76644 # NWarila/.github main @ 2026-06-04
     with:
       source_repo: NWarila/.github
       source_ref: main

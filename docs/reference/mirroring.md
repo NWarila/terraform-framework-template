@@ -45,6 +45,7 @@ Starter, scaffold, existence, or local entries are appropriate for:
 
 - Repo-customizable lint, hook, editor, or documentation configuration.
 - Workflow callers that embed namespace-specific `.github` paths across a multi-namespace target set.
+- Runner protocol references that describe repo-specific overlay paths, runtime fixtures, or evidence artifacts.
 - Template-internal tools, tests, fixtures, and policies that consumers do not run.
 - Repo-specific diagrams, inventories, runtime evidence, and runbooks.
 

@@ -1,4 +1,4 @@
-﻿# Architecture Decision Records
+# Architecture Decision Records
 
 This directory holds the Architecture Decision Records (ADRs) governing this framework. Per [org ADR-0001](org/0001-use-architecture-decision-records.md), ADRs are organized into three scopes:
 

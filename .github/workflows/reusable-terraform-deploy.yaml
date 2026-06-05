@@ -137,15 +137,16 @@ on:
         description: '"no-changes" | "has-changes" | "failed"'
         value: ${{ jobs.deploy.outputs.plan_status }}
 
-permissions:
-  contents: read
-  id-token: write
+permissions: {}
 
 jobs:
   deploy:
     name: framework-template / deploy
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read # required to check out the pinned framework and consumer repositories
+      id-token: write # required only when backend_mode=s3 assumes the caller's AWS role via OIDC
     outputs:
       plan_status: ${{ steps.plan.outputs.plan_status }}
     defaults:

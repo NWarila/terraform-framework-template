@@ -16,6 +16,11 @@ H2_RE = re.compile(r"^## (.+?)\s*$", re.MULTILINE)
 INDEX_LINK_RE = re.compile(
     r"\((?P<target>(?:org|template|repo)/[0-9]{4}-[^)#\s]+\.md)\)"
 )
+TABLE_ROW_RE = re.compile(r"^\|\s*(?P<field>[^|]+?)\s*\|\s*(?P<value>[^|]*?)\s*\|")
+AI_AUTHOR_RE = re.compile(
+    # Authors must come from an approved-author allowlist.
+    re.IGNORECASE,
+)
 
 REQUIRED_SECTIONS = (
     "TL;DR",
@@ -33,6 +38,7 @@ REQUIRED_SECTIONS = (
     "Related ADRs",
     "Compliance Notes",
 )
+REQUIRED_METADATA = ("Date", "Authors", "Review-by")
 
 
 def adr_files() -> list[Path]:
@@ -51,10 +57,42 @@ def rel(path: Path) -> str:
     return path.relative_to(ADR_ROOT).as_posix()
 
 
+def check_markdown_boms() -> list[str]:
+    errors: list[str] = []
+    for path in sorted(ROOT.rglob("*.md")):
+        if path.read_bytes().startswith(b"\xef\xbb\xbf"):
+            errors.append(f"{path.relative_to(ROOT).as_posix()} has a UTF-8 BOM")
+    return errors
+
+
+def metadata_rows(text: str) -> dict[str, str]:
+    rows: dict[str, str] = {}
+    for line in text.splitlines():
+        match = TABLE_ROW_RE.match(line)
+        if not match:
+            continue
+        field = match.group("field").strip()
+        value = match.group("value").strip()
+        if field in {"Field", "--------------"}:
+            continue
+        if set(field) == {"-"}:
+            continue
+        rows[field] = value
+    return rows
+
+
 def check_schema(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     headings = [match.group(1).strip() for match in H2_RE.finditer(text)]
     errors: list[str] = []
+
+    metadata = metadata_rows(text)
+    for field in REQUIRED_METADATA:
+        if not metadata.get(field):
+            errors.append(f"{rel(path)} missing metadata field: {field}")
+    authors = metadata.get("Authors", "")
+    if AI_AUTHOR_RE.search(authors):
+        errors.append(f"{rel(path)} Authors metadata contains AI-tool attribution")
 
     missing = [section for section in REQUIRED_SECTIONS if section not in headings]
     if missing:
@@ -87,6 +125,7 @@ def check_index(files: list[Path]) -> list[str]:
 def main() -> int:
     files = adr_files()
     errors: list[str] = []
+    errors.extend(check_markdown_boms())
     for path in files:
         errors.extend(check_schema(path))
     errors.extend(check_index(files))

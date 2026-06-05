@@ -9,7 +9,7 @@
 | Consulted      | Terraform runner pinning ADR and provider lock policy. |
 | Informed       | Derivative frameworks via baseline manifest. |
 | Reversibility  | Medium                                  |
-| Review-by      | N/A (Accepted)                          |
+| Review-by      | 2026-11-29                              |
 
 ## TL;DR
 
