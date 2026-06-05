@@ -17,9 +17,12 @@ INDEX_LINK_RE = re.compile(
     r"\((?P<target>(?:org|template|repo)/[0-9]{4}-[^)#\s]+\.md)\)"
 )
 TABLE_ROW_RE = re.compile(r"^\|\s*(?P<field>[^|]+?)\s*\|\s*(?P<value>[^|]*?)\s*\|")
-AI_AUTHOR_RE = re.compile(
-    # Authors must come from an approved-author allowlist.
-    re.IGNORECASE,
+# Authors must come from an approved-author allowlist. Allow-listing approved
+# identities (instead of denying specific tool names) keeps this guard itself free
+# of tool-specific tokens while still rejecting any unrecognized authorship.
+ALLOWED_AUTHORS = ("@nwarila",)
+ALLOWED_AUTHOR_RES = tuple(
+    re.compile(re.escape(handle), re.IGNORECASE) for handle in ALLOWED_AUTHORS
 )
 
 REQUIRED_SECTIONS = (
@@ -91,8 +94,15 @@ def check_schema(path: Path) -> list[str]:
         if not metadata.get(field):
             errors.append(f"{rel(path)} missing metadata field: {field}")
     authors = metadata.get("Authors", "")
-    if AI_AUTHOR_RE.search(authors):
-        errors.append(f"{rel(path)} Authors metadata contains AI-tool attribution")
+    if authors:
+        unapproved = [
+            entry.strip()
+            for entry in authors.split(",")
+            if entry.strip()
+            and not any(rx.search(entry) for rx in ALLOWED_AUTHOR_RES)
+        ]
+        if unapproved:
+            errors.append(f"{rel(path)} Authors metadata contains a non-approved author")
 
     missing = [section for section in REQUIRED_SECTIONS if section not in headings]
     if missing:
