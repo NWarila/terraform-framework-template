@@ -3,10 +3,12 @@
 Template ADRs apply to all Terraform framework repositories derived from this template.
 
 ADR-template/0001, ADR-template/0002, and ADR-template/0004 were authored
-together as part of the initial `terraform-framework-template` release
-hardening pass on 2026-05-11. They record decisions that already existed in
-the template design or were made during that release-readiness pass, rather
-than a sequence of independent historical decisions.
+during the initial `terraform-framework-template` release-hardening pass.
+Their Date fields record the actual decision dates: 0001 on 2026-05-06,
+0002 on 2026-05-07, and 0004 on 2026-05-10. They record decisions that
+already existed in the template design or were made during that
+release-readiness pass, rather than a sequence of independent historical
+decisions all made on one day.
 
 ADR-template/0005 records the later manifest-classification rule that lets
 derivative frameworks repoint org-control-plane workflow callers to their own

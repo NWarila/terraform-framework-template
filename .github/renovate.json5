@@ -114,11 +114,14 @@
       "semanticCommitScope": "deps"
     },
     {
-      // Bumps to NWarila/terraform-framework-template itself (when runners
-      // pin against this template's SHA in workflow `uses:` references or
-      // `framework_ref` inputs) are grouped and reviewed by the maintainer.
-      "matchDepNames": ["NWarila/terraform-framework-template"],
-      "groupName": "terraform-framework-template",
+      // Bumps to first-party workflow/control-plane repositories are grouped
+      // and reviewed by the maintainer.
+      "matchDepNames": [
+        "NWarila/.github",
+        "NWarila/drift-gate",
+        "NWarila/terraform-framework-template"
+      ],
+      "groupName": "first-party workflow pins",
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
       "automerge": false

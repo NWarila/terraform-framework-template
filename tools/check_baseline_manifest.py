@@ -87,7 +87,7 @@ def main() -> None:
     else:
         require_keys(raw, {"version", "byte_identical", "scaffold_starter"})
         byte_identical_sources, byte_identical_targets = validate_entries(
-            "byte_identical", raw["byte_identical"], allow_empty=False
+            "byte_identical", raw["byte_identical"], allow_empty=True
         )
         scaffold_sources, scaffold_targets = validate_entries(
             "scaffold_starter", raw["scaffold_starter"], allow_empty=True

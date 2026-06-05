@@ -20,11 +20,9 @@ plugin "terraform" {
 
 # region ------ [ Rule overrides ] --------------------------------------------------------- #
 
-# This framework uses synthetic providers (null/random/local/time/tls)
-# whose resources legitimately have many optional attributes that the
-# `terraform_unused_declarations` rule does not consider in context.
-# Disable the noisy unused-declarations rule for these synthetic
-# resources; real frameworks should leave it enabled.
+# Keep unused declaration checks enabled. Derivative modules that need a
+# local exception must document it in their own repo rather than inheriting
+# a blanket provider-specific rationale from the template.
 
 rule "terraform_unused_declarations" {
   enabled = true
