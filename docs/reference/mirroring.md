@@ -1,6 +1,6 @@
 # Mirroring Reference
 
-This reference describes how inherited files move from control-plane and template repositories into adopting repositories. It is governed by [ADR-0001](../decision-records/org/0001-use-architecture-decision-records.md), [ADR-0006](../decision-records/org/0006-keep-github-control-planes-namespace-local.md), and [ADR-0009](../decision-records/org/0009-classify-baseline-manifest-byte-identity.md).
+This reference describes how inherited files move from control-plane and template repositories into adopting repositories. It is governed by [ADR-0001](../decision-records/0001-use-architecture-decision-records.md), [ADR-0006](../decision-records/0006-keep-github-control-planes-namespace-local.md), and [ADR-0009](../decision-records/0009-classify-baseline-manifest-byte-identity.md).
 
 ## Core Rule
 
@@ -45,7 +45,6 @@ Starter, scaffold, existence, or local entries are appropriate for:
 
 - Repo-customizable lint, hook, editor, or documentation configuration.
 - Workflow callers that embed namespace-specific `.github` paths across a multi-namespace target set.
-- Runner protocol references that describe repo-specific overlay paths, runtime fixtures, or evidence artifacts.
 - Template-internal tools, tests, fixtures, and policies that consumers do not run.
 - Repo-specific diagrams, inventories, runtime evidence, and runbooks.
 
