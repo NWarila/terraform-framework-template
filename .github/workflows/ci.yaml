@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: read # required for checkout across all CI jobs unless overridden
 
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
@@ -104,8 +104,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
-      security-events: write
+      contents: read # required for checkout before generating the SARIF report
+      security-events: write # required to upload advisory Ruff SARIF to code scanning
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -135,8 +135,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
-      security-events: write
+      contents: read # required for checkout before generating the SARIF report
+      security-events: write # required to upload advisory TFLint SARIF to code scanning
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:

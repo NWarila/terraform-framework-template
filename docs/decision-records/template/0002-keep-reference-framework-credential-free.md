@@ -9,7 +9,7 @@
 | Consulted      | Reference-framework threat model.       |
 | Informed       | Derivative framework maintainers via threat-model docs. |
 | Reversibility  | High                                    |
-| Review-by      | N/A (Accepted)                          |
+| Review-by      | 2026-11-29                              |
 
 ## TL;DR
 

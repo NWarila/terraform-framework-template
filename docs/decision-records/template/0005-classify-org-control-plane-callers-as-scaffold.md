@@ -4,12 +4,12 @@
 | -------------- | --------------------------------------- |
 | Status         | Accepted                                |
 | Date           | 2026-06-01                              |
-| Authors        | Nick Warila (@NWarila)           |
+| Authors        | Nick Warila (@NWarila)                  |
 | Decision-maker | Nick Warila (sole portfolio maintainer) |
 | Consulted      | Drift-gate findings from `nwarila-platform/proxmox-terraform-framework`. |
 | Informed       | Maintainers of derivative Terraform framework repositories. |
 | Reversibility  | Medium                                  |
-| Review-by      | N/A (Accepted)                          |
+| Review-by      | 2026-11-29                              |
 
 ## TL;DR
 
@@ -41,7 +41,7 @@ The template needs to distinguish files that are framework-contractual from file
 
 Chosen option: **Option 3, classify org-control-plane caller files as scaffold starter files.**
 
-`baseline-manifest.json` keeps `docs/reference/runner-protocol.md` in `byte_identical` because the runner protocol is namespace-agnostic and defines the shared framework execution contract.
+`baseline-manifest.json` keeps `docs/reference/runner-protocol.md` in `scaffold_starter` because derivative frameworks customize runner overlay paths, runtime fixture inventories, and evidence-artifact descriptions to match the framework they actually support.
 
 Files that mention an org `.github` repository move to `scaffold_starter`. That includes:
 
@@ -126,4 +126,3 @@ Pending. This ADR is implemented by the PR that adds it, demotes the org-control
 ## Compliance Notes
 
 This ADR supports configuration management by making the drift-gate contract match the intended ownership boundary. It does not itself prove compliance.
-

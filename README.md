@@ -63,7 +63,7 @@ This framework follows the "packer-aligned" style established in [`nwarila-platf
 | File | Role |
 | --- | --- |
 | [`terraform/versions.tf`](terraform/versions.tf) | `required_version` + `required_providers` (exact pins per [ADR-template/0001](docs/decision-records/template/0001-pin-terraform-and-provider-versions-exactly.md)) |
-| [`terraform/providers.tf`](terraform/providers.tf) | Provider blocks. Reference variables directly, no logic. |
+| [`terraform/providers.tf`](terraform/providers.tf) | Provider inheritance policy. This synthetic module intentionally declares no provider blocks. |
 | [`terraform/backend.tf`](terraform/backend.tf) | Backend config. Local for this showcase; commented S3/GCS/azurerm/HCP variants for real frameworks. |
 | [`terraform/data.tf`](terraform/data.tf) | Data sources. Demonstrates the data-source-injection pattern. |
 | [`terraform/variables.tf`](terraform/variables.tf) | Consumer-facing input contract. Provider-level flat vars + one mega-object per managed resource type with `optional(<type>, <default>)` baked in. |

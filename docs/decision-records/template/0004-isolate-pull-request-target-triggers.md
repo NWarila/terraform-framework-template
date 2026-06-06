@@ -9,7 +9,7 @@
 | Consulted      | zizmor findings and pull-request-target OPA policy. |
 | Informed       | Derivative frameworks via release and auto-merge docs. |
 | Reversibility  | Medium                                  |
-| Review-by      | N/A (Accepted)                          |
+| Review-by      | 2026-11-29                              |
 
 ## TL;DR
 

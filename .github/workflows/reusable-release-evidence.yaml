@@ -55,7 +55,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: read # required for release-evidence workflows to inspect repository content by default
 
 jobs:
   evidence:
@@ -63,9 +63,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
-      attestations: write
+      attestations: write # required to publish provenance and SBOM attestations
       contents: write  # required for `gh release upload`
-      id-token: write
+      id-token: write # required by GitHub artifact attestation provenance
     defaults:
       run:
         shell: bash

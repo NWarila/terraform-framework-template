@@ -1,4 +1,4 @@
-﻿name: Org ADR Sync
+name: Org ADR Sync
 
 on:
   pull_request:
@@ -7,9 +7,7 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  checks: write
+permissions: {}
 
 concurrency:
   group: org-adr-sync-${{ github.event.pull_request.number || github.ref }}
@@ -20,13 +18,16 @@ jobs:
     name: org-adr / verify
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      contents: read # required for the drift-gate action to read this repository's manifest
+      checks: write # required for drift-gate to publish inline PR annotations
     steps:
       - name: Drift gate (org ADR baseline)
         # renovate: datasource=git-refs depName=NWarila/drift-gate
-        uses: NWarila/drift-gate@dac07c2b2a30a084b3577d4712549291ae99879c
+        uses: NWarila/drift-gate@dac07c2b2a30a084b3577d4712549291ae99879c # NWarila/drift-gate main @ 2026-05-29
         with:
           source-repo: NWarila/.github
           # renovate: depName=NWarila/.github packageName=NWarila/.github
-          source-ref: e8bc517828a9915a401096305124dff316b76644
+          source-ref: 791fe6af86fcccf8de807a09b9f7c8f38f268532
           manifest: org-adr-manifest.json
           check-name: org-adr / verify
