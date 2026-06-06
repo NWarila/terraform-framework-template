@@ -159,5 +159,9 @@
 !/docs/reference/ci-alignment-design-intent.md
 !/docs/reference/ci-validator-invocation.md
 !/docs/explanation/repo-type-taxonomy-and-ci-focus.md
+!/docs/diagrams/
 !/docs/diagrams/.gitkeep
+!/docs/diagrams/architecture.mmd
 !/docs/runbooks/.gitkeep
+!/docs/runbooks/purge-ai-attributed-history.md
+!/docs/decision-records/repo/0001-use-synthetic-providers-for-reference-framework.md
