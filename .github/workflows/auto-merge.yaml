@@ -20,4 +20,4 @@ jobs:
     permissions:
       contents: write # required for GitHub auto-merge to update the protected branch
       pull-requests: write # required to enable auto-merge on trusted-bot pull requests
-    uses: NWarila/.github/.github/workflows/reusable-auto-merge.yaml@19a4c98f404039292bb4a74c60602f3229539958 # NWarila/.github main @ 2026-06-04
+    uses: NWarila/.github/.github/workflows/reusable-auto-merge.yaml@791fe6af86fcccf8de807a09b9f7c8f38f268532 # NWarila/.github main @ 2026-06-11
