@@ -38,14 +38,14 @@ jobs:
         with:
           source-repo: NWarila/terraform-framework-template
           # renovate: depName=NWarila/terraform-framework-template packageName=NWarila/terraform-framework-template currentValue=main
-          source-ref: c757d41a6402c479333d7cbe37c12223605c9861 # NWarila/terraform-framework-template main @ 2026-06-11
+          source-ref: 799c8e5c05e0a106c4a4f0cd5368e19d34f1c506 # NWarila/terraform-framework-template main @ 2026-06-11
           manifest: baseline-manifest.json
           check-name: framework-template / verify
 
       - name: Scaffold starter target audit
         env:
           SOURCE_REPO: https://github.com/NWarila/terraform-framework-template.git
-          SOURCE_REF: c757d41a6402c479333d7cbe37c12223605c9861
+          SOURCE_REF: 799c8e5c05e0a106c4a4f0cd5368e19d34f1c506
         run: |
           set -euo pipefail
 
