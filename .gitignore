@@ -164,6 +164,7 @@
 !/docs/diagrams/
 !/docs/diagrams/.gitkeep
 !/docs/diagrams/architecture.mmd
+!/docs/diagrams/reusable-workflow-call-graph.mmd
 !/docs/runbooks/
 !/docs/runbooks/.gitkeep
 !/docs/runbooks/purge-ai-attributed-history.md
