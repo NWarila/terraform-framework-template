@@ -20,6 +20,7 @@
 !/release-please-config.json
 !/.release-please-manifest.json
 !/baseline-manifest.json
+!/template-drift.json
 
 !/.github/
 !/.github/CODEOWNERS

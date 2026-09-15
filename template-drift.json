@@ -1,0 +1,150 @@
+{
+  "version": 3,
+  "checks": [
+    {
+      "mode": "bytes_equal",
+      "path": "docs/decision-records/template/README.md",
+      "severity": "error"
+    },
+    {
+      "mode": "bytes_equal",
+      "path": "docs/decision-records/template/0001-pin-terraform-and-provider-versions-exactly.md",
+      "severity": "error"
+    },
+    {
+      "mode": "bytes_equal",
+      "path": "docs/decision-records/template/0002-keep-reference-framework-credential-free.md",
+      "severity": "error"
+    },
+    {
+      "mode": "bytes_equal",
+      "path": "docs/decision-records/template/0004-isolate-pull-request-target-triggers.md",
+      "severity": "error"
+    },
+    {
+      "mode": "bytes_equal",
+      "path": "docs/decision-records/template/0005-classify-org-control-plane-callers-as-scaffold.md",
+      "severity": "error"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".editorconfig"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".gitattributes"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".github/CODEOWNERS"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".github/renovate.json5"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".github/workflows/ci.yaml"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".github/workflows/security.yaml"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".gitignore"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".markdownlint-cli2.jsonc"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".pre-commit-config.yaml"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".terraform-docs.yml"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".tflint.hcl"
+    },
+    {
+      "mode": "must_exist",
+      "path": "Makefile"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/README.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/decision-records/README.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/decision-records/org/.gitkeep"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/decision-records/repo/.gitkeep"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/decision-records/template/.gitkeep"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/explanation/architecture.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/explanation/testing-strategy.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/explanation/threat-model.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/how-to/develop-this-module.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/reference/invariants.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/reference/mirroring.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/reference/release-gates.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "docs/reference/runner-protocol.md"
+    },
+    {
+      "mode": "must_exist",
+      "path": "release-please-config.json"
+    },
+    {
+      "mode": "must_exist",
+      "path": "tools/check_docs_layout.py"
+    },
+    {
+      "mode": "must_exist",
+      "path": "tools/install_ci_tools.sh"
+    },
+    {
+      "mode": "must_exist",
+      "path": ".github/workflows/template-drift.yaml"
+    }
+  ]
+}
