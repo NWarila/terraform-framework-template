@@ -3,10 +3,14 @@
 PRs to `main` on this template must pass:
 
 - `actionlint` (workflow syntax)
+- `template-drift / run / check` (signature-verified workflow-container policy)
 - `workflow helper tests` (ShellCheck, workflow input binding checks, and Bats coverage for workflow helpers)
 - `markdownlint` (docs)
 - `terraform verify` (`python tools/verify.py verify`, including Terraform gates, source-aware OPA, plan-aware OPA, lint, docs, manifest, and integration)
 - `org-baseline / verify` (drift-gate against `NWarila/.github` at pinned source-ref)
+
+Consumers copy the workflow-container hook entries into `.pre-commit-config.yaml` once; template
+sync then maintains the inherited workflow, identity, and editor tasks byte-for-byte.
 - `Trivy (filesystem & secrets)`, `Gitleaks (secret scan)`, `zizmor (Actions security)` (security)
 - `CodeQL` (`security.yaml`)
 

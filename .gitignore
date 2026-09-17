@@ -38,6 +38,10 @@
 !/.github/workflows/reusable-terraform-deploy.yaml
 !/.github/workflows/security.yaml
 !/.github/workflows/template-sync.yaml
+!/.github/workflows/workflow-containers.yaml
+
+!/.vscode/
+!/.vscode/tasks.json
 
 !/docs/
 !/docs/README.md

@@ -65,20 +65,6 @@
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: packageName=(?<packageName>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?\\s+\\w+_VERSION=\"(?<currentValue>[^\"]+)\"",
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: packageName=(?<packageName>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?\\s+pip install --no-cache-dir (?<depName2>[a-zA-Z0-9-._]+)==(?<currentValue>[^\\s]+)"
       ]
-    },
-    {
-      // Track SHA body inputs that must move with reusable workflow `uses:`
-      // pins. Renovate's git-refs datasource treats the branch name as
-      // currentValue and the checked-in 40-char SHA as currentDigest.
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^\\.github/workflows/.*\\.ya?ml$/"
-      ],
-      "datasourceTemplate": "git-refs",
-      "versioningTemplate": "loose",
-      "matchStrings": [
-        "# renovate: depName=(?<depName>[^\\s]+) packageName=(?<packageName>[^\\s]+) currentValue=(?<currentValue>[^\\s]+)\\s+(?:template_ref|framework_ref|source-ref):\\s*(?<currentDigest>[0-9a-f]{40})"
-      ]
     }
   ],
 
@@ -119,12 +105,18 @@
       "matchDepNames": [
         "NWarila/.github",
         "NWarila/drift-gate",
-        "NWarila/terraform-framework-template"
+        "NWarila/terraform-framework-template",
+        "nwarila-platform/.github",
+        "nwarila-platform/workflow-template-drift"
       ],
       "groupName": "first-party workflow pins",
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
       "automerge": false
+    },
+    {
+      "matchPackageNames": ["nwarila-platform/**", "NWarila/**"],
+      "minimumReleaseAge": null
     }
   ]
 }

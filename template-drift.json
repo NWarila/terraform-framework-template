@@ -139,7 +139,23 @@
       "path": "tools/install_ci_tools.sh"
     },
     {
+      "mode": "bytes_equal",
+      "path": ".github/workflows/workflow-containers.yaml"
+    },
+    {
+      "mode": "bytes_equal",
+      "path": ".github/.config/template-drift.yaml"
+    },
+    {
+      "mode": "bytes_equal",
+      "path": ".vscode/tasks.json"
+    },
+    {
       "mode": "must_exist",
+      "path": ".github/.config/template-drift.lock"
+    },
+    {
+      "mode": "must_be_absent",
       "path": ".github/workflows/template-drift.yaml"
     }
   ]

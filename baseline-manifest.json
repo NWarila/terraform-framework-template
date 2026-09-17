@@ -24,6 +24,14 @@
     {
       "source": ".github/.config/template-drift.yaml",
       "target": ".github/.config/template-drift.yaml"
+    },
+    {
+      "source": ".github/workflows/workflow-containers.yaml",
+      "target": ".github/workflows/workflow-containers.yaml"
+    },
+    {
+      "source": ".vscode/tasks.json",
+      "target": ".vscode/tasks.json"
     }
   ],
   "scaffold_starter": [
