@@ -11,6 +11,7 @@ PRs to `main` on this template must pass:
 
 Consumers copy the workflow-container hook entries into `.pre-commit-config.yaml` once; template
 sync then maintains the inherited workflow, identity, and editor tasks byte-for-byte.
+
 - `Trivy (filesystem & secrets)`, `Gitleaks (secret scan)`, `zizmor (Actions security)` (security)
 - `CodeQL` (`security.yaml`)
 
