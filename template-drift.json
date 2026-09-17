@@ -88,10 +88,6 @@
     },
     {
       "mode": "must_exist",
-      "path": "docs/decision-records/org/.gitkeep"
-    },
-    {
-      "mode": "must_exist",
       "path": "docs/decision-records/repo/.gitkeep"
     },
     {
