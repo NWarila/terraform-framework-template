@@ -20,6 +20,10 @@
     {
       "source": "docs/decision-records/template/0005-classify-org-control-plane-callers-as-scaffold.md",
       "target": "docs/decision-records/template/0005-classify-org-control-plane-callers-as-scaffold.md"
+    },
+    {
+      "source": ".github/.config/template-drift.yaml",
+      "target": ".github/.config/template-drift.yaml"
     }
   ],
   "scaffold_starter": [
@@ -234,6 +238,10 @@
     {
       "source": "tools/verify.py",
       "target": "tools/verify.py"
+    },
+    {
+      "source": ".github/.config/template-drift.lock",
+      "target": ".github/.config/template-drift.lock"
     }
   ]
 }
