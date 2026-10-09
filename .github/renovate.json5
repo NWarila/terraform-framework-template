@@ -50,6 +50,11 @@
     "custom.regex"
   ],
 
+  // The pre-commit manager is disabled by default.
+  "pre-commit": {
+    "enabled": true
+  },
+
   "customManagers": [
     {
       // Match `# renovate: datasource=...` annotations followed by a
@@ -64,6 +69,18 @@
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: packageName=(?<packageName>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?\\s+\\w+(?:_VERSION)?:\\s*\"(?<currentValue>[^\"]+)\"",
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: packageName=(?<packageName>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?\\s+\\w+_VERSION=\"(?<currentValue>[^\"]+)\"",
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: packageName=(?<packageName>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?\\s+pip install --no-cache-dir (?<depName2>[a-zA-Z0-9-._]+)==(?<currentValue>[^\\s]+)"
+      ]
+    },
+    {
+      // Update the image version and its digest together.
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "versioningTemplate": "semver",
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-zA-Z0-9._-]+) depName=(?<depName>[^\\s]+)\\s+version:\\s*(?<currentValue>[^\\s]+)\\s+digest:\\s*(?<currentDigest>sha256:[a-f0-9]{64})",
+        "# renovate: datasource=(?<datasource>[a-zA-Z0-9._-]+) depName=(?<depName>[^\\s]+)\\s+version=(?<currentValue>[^\\s]+)\\s+digest=(?<currentDigest>sha256:[a-f0-9]{64})"
       ]
     }
   ],
@@ -117,6 +134,18 @@
     {
       "matchPackageNames": ["nwarila-platform/**", "NWarila/**"],
       "minimumReleaseAge": null
+    },
+    {
+      // Docker registry metadata has no release time, so exempt first-party
+      // images from the strict seven-day quarantine or every update is held.
+      "matchPackageNames": ["ghcr.io/nwarila-platform/**"],
+      "minimumReleaseAge": null
+    },
+    {
+      // Keep the factory hook on template-drift tags only.
+      "matchManagers": ["pre-commit"],
+      "matchPackageNames": ["nwarila-platform/workflow-container-factory"],
+      "extractVersion": "^template-drift/v(?<version>.*)$"
     }
   ]
 }
